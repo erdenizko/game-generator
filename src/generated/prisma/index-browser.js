@@ -163,6 +163,7 @@ exports.Prisma.GameActionScalarFieldEnum = {
 exports.Prisma.GameConfigScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  gameType: 'gameType',
   partnerId: 'partnerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

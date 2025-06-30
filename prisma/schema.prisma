@@ -61,6 +61,7 @@ model GameAction {
 model GameConfig {
   id              String        @id
   name            String        @default("default")
+  gameType        String        @default("hexagon_mining")
   partnerId       String?
   Partner         Partner?      @relation(fields: [partnerId], references: [id])
   createdAt       DateTime      @default(now())

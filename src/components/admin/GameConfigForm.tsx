@@ -7,6 +7,9 @@ import { GameConfig } from "@/generated/prisma";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./ImageUpload";
 import { useState, useEffect } from "react";
+import { HexagonMiningConfig } from "../games/HexagonMining";
+import { CasinoWheelConfig } from "../games/CasinoWheel";
+import { SlotMachineConfig } from "../games/SlotMachine";
 
 interface GameConfigFormProps {
     game?: GameConfig;
@@ -18,10 +21,17 @@ const probabilityKeys: ProbabilityKey[] = ['probDust', 'probRock', 'probOil', 'p
 type MultiplierKey = 'multOil' | 'multGold' | 'multDiamond';
 const multiplierKeys: MultiplierKey[] = ['multOil', 'multGold', 'multDiamond'];
 
+const gameTypes = [
+    { value: 'hexagon_mining', label: 'Legacy Hexagon Mining', description: 'Classic mining game with hexagonal grid' },
+    { value: 'casino_wheel', label: 'Casino Wheel', description: 'Spin the wheel of fortune' },
+    { value: 'slot_machine', label: 'Slot Machine', description: 'Traditional slot machine gameplay' }
+];
+
 export function GameConfigForm({ game }: GameConfigFormProps) {
     const router = useRouter();
-    const [formData, setFormData] = useState<Partial<GameConfig>>({
+    const [formData, setFormData] = useState<Partial<GameConfig & {gameType: string}>>({
         name: '',
+        gameType: 'hexagon_mining',
         defaultBid: 5,
         movesPerRound: 10,
         bidAmounts: [1, 5, 10, 20],
@@ -100,79 +110,138 @@ export function GameConfigForm({ game }: GameConfigFormProps) {
         }
     }
 
+    const renderGameTypeConfig = () => {
+        switch (formData.gameType) {
+            case 'hexagon_mining':
+                return <HexagonMiningConfig formData={formData} onChange={setFormData} onImageUpload={handleImageUpload} />;
+            case 'casino_wheel':
+                return <CasinoWheelConfig formData={formData} onChange={setFormData} />;
+            case 'slot_machine':
+                return <SlotMachineConfig formData={formData} onChange={setFormData} />;
+            default:
+                return <div className="text-center py-8 text-gray-500">Please select a game type</div>;
+        }
+    };
+
     return (
-        <div className="flex flex-col gap-16">
-            <div className="w-full">
-                <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Game Name</Label>
-                            <Input id="name" name="name" value={formData.name} onChange={handleInputChange} required />
+        <div className="max-w-7xl mx-auto space-y-8">
+            {/* Modern Header */}
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm">
+                <div className="space-y-6">
+                    {/* Game Type Selection */}
+                    <div className="space-y-4">
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Game Type</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Choose the type of game you want to create</p>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="defaultBid">Default Bid</Label>
-                            <Input id="defaultBid" name="defaultBid" type="number" value={formData.defaultBid ?? ''} onChange={handleInputChange} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="movesPerRound">Moves per Round</Label>
-                            <Input id="movesPerRound" name="movesPerRound" type="number" value={formData.movesPerRound} onChange={handleInputChange} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="bidAmounts">Bid Amounts (comma-separated)</Label>
-                            <Input id="bidAmounts" name="bidAmounts" type="text" value={formData.bidAmounts?.join(', ')} onChange={handleInputChange} />
-                        </div>
-                    </div>
-
-                    <h2 className="text-2xl font-bold">Probabilities (%)</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                        {probabilityKeys.map(p => {
-                            const label = p.replace('prob', '');
-                            return (
-                                <div key={p} className="space-y-2">
-                                    <Label htmlFor={p}>{label}</Label>
-                                    <Input id={p} name={p} type="number" value={formData[p] ?? ''} onChange={handleInputChange} />
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {gameTypes.map((type) => (
+                                <div 
+                                    key={type.value}
+                                    className={`relative cursor-pointer rounded-lg border p-4 transition-all hover:border-blue-500 ${
+                                        formData.gameType === type.value 
+                                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
+                                            : 'border-gray-200 dark:border-gray-700'
+                                    }`}
+                                    onClick={() => setFormData(prev => ({ ...prev, gameType: type.value }))}
+                                >
+                                    <div className="flex items-start space-x-3">
+                                        <div className={`flex-shrink-0 w-4 h-4 rounded-full border-2 mt-0.5 ${
+                                            formData.gameType === type.value
+                                                ? 'border-blue-500 bg-blue-500'
+                                                : 'border-gray-300 dark:border-gray-600'
+                                        }`}>
+                                            {formData.gameType === type.value && (
+                                                <div className="w-2 h-2 bg-white rounded-full m-0.5"></div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                                                {type.label}
+                                            </h3>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                {type.description}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                            )
-                        })}
+                            ))}
+                        </div>
                     </div>
 
-
-                    <h2 className="text-2xl font-bold">Multipliers</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {multiplierKeys.map(m => {
-                            const label = m.replace('mult', '');
-                            return (
-                                <div key={m} className="space-y-2">
-                                    <Label htmlFor={m}>{label}</Label>
-                                    <Input id={m} name={m} type="number" step="0.1" value={formData[m] ?? ''} onChange={handleInputChange} />
-                                </div>
-                            )
-                        })}
+                    {/* Basic Game Info */}
+                    <div className="space-y-4">
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Set up the basic details for your game</p>
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <Label htmlFor="name" className="text-sm font-medium">Game Name</Label>
+                            <Input 
+                                id="name" 
+                                name="name" 
+                                value={formData.name} 
+                                onChange={handleInputChange} 
+                                placeholder="Enter a unique name for your game"
+                                className="w-full"
+                                required 
+                            />
+                        </div>
                     </div>
-
-                    <h2 className="text-2xl font-bold">Image Assets</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <ImageUpload name="backgroundUrl" label="Background" defaultValue={formData.backgroundUrl} onUpload={(url: string) => handleImageUpload("backgroundUrl", url)} />
-                        <ImageUpload name="mascotImageUrl" label="Mascot" defaultValue={formData.mascotImageUrl} onUpload={(url: string) => handleImageUpload("mascotImageUrl", url)} />
-                        <ImageUpload name="diamondImageUrl" label="Diamond" defaultValue={formData.diamondImageUrl} onUpload={(url: string) => handleImageUpload("diamondImageUrl", url)} />
-                        <ImageUpload name="goldImageUrl" label="Gold" defaultValue={formData.goldImageUrl} onUpload={(url: string) => handleImageUpload("goldImageUrl", url)} />
-                        <ImageUpload name="oilImageUrl" label="Oil" defaultValue={formData.oilImageUrl} onUpload={(url: string) => handleImageUpload("oilImageUrl", url)} />
-                        <ImageUpload name="rockImageUrl" label="Rock" defaultValue={formData.rockImageUrl} onUpload={(url: string) => handleImageUpload("rockImageUrl", url)} />
-                        <ImageUpload name="dustImageUrl" label="Dust" defaultValue={formData.dustImageUrl} onUpload={(url: string) => handleImageUpload("dustImageUrl", url)} />
-                    </div>
-
-                    <Button type="submit">{game ? 'Update Game' : 'Create Game'}</Button>
-                </form>
+                </div>
             </div>
-            <div className="w-full min-h-[500px]">
-                <div className="sticky top-8">
-                    <h2 className="text-2xl font-bold mb-4">Live Preview</h2>
-                    <div className="w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-                        <iframe
-                            id="game-preview"
-                            className="w-[1200px] h-[600px] border-0"
-                            title="Game Preview"
-                        />
+
+            {/* Game Configuration */}
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm">
+                <div className="space-y-6">
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Game Configuration</h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Configure the specific settings for your {gameTypes.find(t => t.value === formData.gameType)?.label.toLowerCase()}
+                        </p>
+                    </div>
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {renderGameTypeConfig()}
+                        
+                        <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <Button 
+                                type="submit" 
+                                className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-md transition-colors"
+                            >
+                                {game ? 'Update Game' : 'Create Game'}
+                            </Button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {/* Live Preview */}
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm">
+                <div className="space-y-4">
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Live Preview</h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">See how your game will look to players</p>
+                    </div>
+                    
+                    <div className="w-full h-[600px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                        {formData.gameType === 'hexagon_mining' ? (
+                            <iframe
+                                id="game-preview"
+                                className="w-full h-full border-0"
+                                title="Game Preview"
+                            />
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                                <div className="text-center">
+                                    <div className="text-4xl mb-4">🎮</div>
+                                    <p className="text-lg font-medium">Preview Coming Soon</p>
+                                    <p className="text-sm">Preview for {gameTypes.find(t => t.value === formData.gameType)?.label} will be available soon</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

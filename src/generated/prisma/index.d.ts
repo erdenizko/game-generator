@@ -6944,6 +6944,7 @@ export namespace Prisma {
   export type GameConfigMinAggregateOutputType = {
     id: string | null
     name: string | null
+    gameType: string | null
     partnerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6976,6 +6977,7 @@ export namespace Prisma {
   export type GameConfigMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    gameType: string | null
     partnerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7008,6 +7010,7 @@ export namespace Prisma {
   export type GameConfigCountAggregateOutputType = {
     id: number
     name: number
+    gameType: number
     partnerId: number
     createdAt: number
     updatedAt: number
@@ -7071,6 +7074,7 @@ export namespace Prisma {
   export type GameConfigMinAggregateInputType = {
     id?: true
     name?: true
+    gameType?: true
     partnerId?: true
     createdAt?: true
     updatedAt?: true
@@ -7103,6 +7107,7 @@ export namespace Prisma {
   export type GameConfigMaxAggregateInputType = {
     id?: true
     name?: true
+    gameType?: true
     partnerId?: true
     createdAt?: true
     updatedAt?: true
@@ -7135,6 +7140,7 @@ export namespace Prisma {
   export type GameConfigCountAggregateInputType = {
     id?: true
     name?: true
+    gameType?: true
     partnerId?: true
     createdAt?: true
     updatedAt?: true
@@ -7255,6 +7261,7 @@ export namespace Prisma {
   export type GameConfigGroupByOutputType = {
     id: string
     name: string
+    gameType: string
     partnerId: string | null
     createdAt: Date
     updatedAt: Date
@@ -7307,6 +7314,7 @@ export namespace Prisma {
   export type GameConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7343,6 +7351,7 @@ export namespace Prisma {
   export type GameConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7377,6 +7386,7 @@ export namespace Prisma {
   export type GameConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7411,6 +7421,7 @@ export namespace Prisma {
   export type GameConfigSelectScalar = {
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7441,7 +7452,7 @@ export namespace Prisma {
     mascotOnDiamondImageUrl?: boolean
   }
 
-  export type GameConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "partnerId" | "createdAt" | "updatedAt" | "backgroundUrl" | "diamondImageUrl" | "dustImageUrl" | "goldImageUrl" | "defaultBid" | "bidAmounts" | "loseSoundUrl" | "movesPerRound" | "multDiamond" | "multGold" | "multOil" | "oilImageUrl" | "probDiamond" | "probDust" | "probGold" | "probOil" | "probRock" | "rockImageUrl" | "winSoundUrl" | "mascotImageUrl" | "mascotOnDustImageUrl" | "mascotOnRockImageUrl" | "mascotOnOilImageUrl" | "mascotOnGoldImageUrl" | "mascotOnDiamondImageUrl", ExtArgs["result"]["gameConfig"]>
+  export type GameConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "gameType" | "partnerId" | "createdAt" | "updatedAt" | "backgroundUrl" | "diamondImageUrl" | "dustImageUrl" | "goldImageUrl" | "defaultBid" | "bidAmounts" | "loseSoundUrl" | "movesPerRound" | "multDiamond" | "multGold" | "multOil" | "oilImageUrl" | "probDiamond" | "probDust" | "probGold" | "probOil" | "probRock" | "rockImageUrl" | "winSoundUrl" | "mascotImageUrl" | "mascotOnDustImageUrl" | "mascotOnRockImageUrl" | "mascotOnOilImageUrl" | "mascotOnGoldImageUrl" | "mascotOnDiamondImageUrl", ExtArgs["result"]["gameConfig"]>
   export type GameConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Partner?: boolean | GameConfig$PartnerArgs<ExtArgs>
     GameSession?: boolean | GameConfig$GameSessionArgs<ExtArgs>
@@ -7463,6 +7474,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      gameType: string
       partnerId: string | null
       createdAt: Date
       updatedAt: Date
@@ -7918,6 +7930,7 @@ export namespace Prisma {
   interface GameConfigFieldRefs {
     readonly id: FieldRef<"GameConfig", 'String'>
     readonly name: FieldRef<"GameConfig", 'String'>
+    readonly gameType: FieldRef<"GameConfig", 'String'>
     readonly partnerId: FieldRef<"GameConfig", 'String'>
     readonly createdAt: FieldRef<"GameConfig", 'DateTime'>
     readonly updatedAt: FieldRef<"GameConfig", 'DateTime'>
@@ -9496,6 +9509,7 @@ export namespace Prisma {
   export const GameConfigScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    gameType: 'gameType',
     partnerId: 'partnerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -9950,6 +9964,7 @@ export namespace Prisma {
     NOT?: GameConfigWhereInput | GameConfigWhereInput[]
     id?: StringFilter<"GameConfig"> | string
     name?: StringFilter<"GameConfig"> | string
+    gameType?: StringFilter<"GameConfig"> | string
     partnerId?: StringNullableFilter<"GameConfig"> | string | null
     createdAt?: DateTimeFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeFilter<"GameConfig"> | Date | string
@@ -9985,6 +10000,7 @@ export namespace Prisma {
   export type GameConfigOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10024,6 +10040,7 @@ export namespace Prisma {
     OR?: GameConfigWhereInput[]
     NOT?: GameConfigWhereInput | GameConfigWhereInput[]
     name?: StringFilter<"GameConfig"> | string
+    gameType?: StringFilter<"GameConfig"> | string
     partnerId?: StringNullableFilter<"GameConfig"> | string | null
     createdAt?: DateTimeFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeFilter<"GameConfig"> | Date | string
@@ -10059,6 +10076,7 @@ export namespace Prisma {
   export type GameConfigOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10100,6 +10118,7 @@ export namespace Prisma {
     NOT?: GameConfigScalarWhereWithAggregatesInput | GameConfigScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"GameConfig"> | string
     name?: StringWithAggregatesFilter<"GameConfig"> | string
+    gameType?: StringWithAggregatesFilter<"GameConfig"> | string
     partnerId?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GameConfig"> | Date | string
@@ -10487,6 +10506,7 @@ export namespace Prisma {
   export type GameConfigCreateInput = {
     id: string
     name?: string
+    gameType?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
@@ -10521,6 +10541,7 @@ export namespace Prisma {
   export type GameConfigUncheckedCreateInput = {
     id: string
     name?: string
+    gameType?: string
     partnerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10555,6 +10576,7 @@ export namespace Prisma {
   export type GameConfigUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10589,6 +10611,7 @@ export namespace Prisma {
   export type GameConfigUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10623,6 +10646,7 @@ export namespace Prisma {
   export type GameConfigCreateManyInput = {
     id: string
     name?: string
+    gameType?: string
     partnerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10656,6 +10680,7 @@ export namespace Prisma {
   export type GameConfigUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10688,6 +10713,7 @@ export namespace Prisma {
   export type GameConfigUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11148,6 +11174,7 @@ export namespace Prisma {
   export type GameConfigCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11195,6 +11222,7 @@ export namespace Prisma {
   export type GameConfigMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11227,6 +11255,7 @@ export namespace Prisma {
   export type GameConfigMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11978,6 +12007,7 @@ export namespace Prisma {
   export type GameConfigCreateWithoutPartnerInput = {
     id: string
     name?: string
+    gameType?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
@@ -12011,6 +12041,7 @@ export namespace Prisma {
   export type GameConfigUncheckedCreateWithoutPartnerInput = {
     id: string
     name?: string
+    gameType?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
@@ -12101,6 +12132,7 @@ export namespace Prisma {
     NOT?: GameConfigScalarWhereInput | GameConfigScalarWhereInput[]
     id?: StringFilter<"GameConfig"> | string
     name?: StringFilter<"GameConfig"> | string
+    gameType?: StringFilter<"GameConfig"> | string
     partnerId?: StringNullableFilter<"GameConfig"> | string | null
     createdAt?: DateTimeFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeFilter<"GameConfig"> | Date | string
@@ -12182,6 +12214,7 @@ export namespace Prisma {
   export type GameConfigCreateWithoutGameSessionInput = {
     id: string
     name?: string
+    gameType?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
@@ -12215,6 +12248,7 @@ export namespace Prisma {
   export type GameConfigUncheckedCreateWithoutGameSessionInput = {
     id: string
     name?: string
+    gameType?: string
     partnerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12318,6 +12352,7 @@ export namespace Prisma {
   export type GameConfigUpdateWithoutGameSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12351,6 +12386,7 @@ export namespace Prisma {
   export type GameConfigUncheckedUpdateWithoutGameSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12647,6 +12683,7 @@ export namespace Prisma {
   export type GameConfigCreateManyPartnerInput = {
     id: string
     name?: string
+    gameType?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
@@ -12703,6 +12740,7 @@ export namespace Prisma {
   export type GameConfigUpdateWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12736,6 +12774,7 @@ export namespace Prisma {
   export type GameConfigUncheckedUpdateWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12769,6 +12808,7 @@ export namespace Prisma {
   export type GameConfigUncheckedUpdateManyWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
