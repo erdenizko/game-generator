@@ -163,34 +163,51 @@ exports.Prisma.GameActionScalarFieldEnum = {
 exports.Prisma.GameConfigScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  gameType: 'gameType',
   partnerId: 'partnerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   backgroundUrl: 'backgroundUrl',
+  defaultBet: 'defaultBet',
+  betAmounts: 'betAmounts',
+  spinsPerSession: 'spinsPerSession',
+  wallet: 'wallet',
+  winSoundUrl: 'winSoundUrl',
+  loseSoundUrl: 'loseSoundUrl',
+  mascotImageUrl: 'mascotImageUrl',
+  mascotOnWinImageUrl: 'mascotOnWinImageUrl',
+  mascotOnLoseImageUrl: 'mascotOnLoseImageUrl',
+  dustPrizeImageUrl: 'dustPrizeImageUrl',
+  rockPrizeImageUrl: 'rockPrizeImageUrl',
+  oilPrizeImageUrl: 'oilPrizeImageUrl',
+  goldPrizeImageUrl: 'goldPrizeImageUrl',
+  diamondPrizeImageUrl: 'diamondPrizeImageUrl',
+  movesPerRound: 'movesPerRound',
   diamondImageUrl: 'diamondImageUrl',
   dustImageUrl: 'dustImageUrl',
   goldImageUrl: 'goldImageUrl',
-  defaultBid: 'defaultBid',
-  bidAmounts: 'bidAmounts',
-  loseSoundUrl: 'loseSoundUrl',
-  movesPerRound: 'movesPerRound',
-  multDiamond: 'multDiamond',
-  multGold: 'multGold',
-  multOil: 'multOil',
   oilImageUrl: 'oilImageUrl',
-  probDiamond: 'probDiamond',
-  probDust: 'probDust',
-  probGold: 'probGold',
-  probOil: 'probOil',
-  probRock: 'probRock',
   rockImageUrl: 'rockImageUrl',
-  winSoundUrl: 'winSoundUrl',
-  mascotImageUrl: 'mascotImageUrl',
   mascotOnDustImageUrl: 'mascotOnDustImageUrl',
   mascotOnRockImageUrl: 'mascotOnRockImageUrl',
   mascotOnOilImageUrl: 'mascotOnOilImageUrl',
   mascotOnGoldImageUrl: 'mascotOnGoldImageUrl',
-  mascotOnDiamondImageUrl: 'mascotOnDiamondImageUrl'
+  mascotOnDiamondImageUrl: 'mascotOnDiamondImageUrl',
+  probDust: 'probDust',
+  probRock: 'probRock',
+  probOil: 'probOil',
+  probGold: 'probGold',
+  probDiamond: 'probDiamond',
+  multDiamond: 'multDiamond',
+  multGold: 'multGold',
+  multOil: 'multOil',
+  wheelSegments: 'wheelSegments',
+  wheelSpeed: 'wheelSpeed',
+  wheelDuration: 'wheelDuration',
+  slotReels: 'slotReels',
+  slotSymbols: 'slotSymbols',
+  slotPaylines: 'slotPaylines',
+  autoSpin: 'autoSpin'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
@@ -212,6 +229,11 @@ exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -227,7 +249,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.GameType = exports.$Enums.GameType = {
+  HEXAGON_MINING: 'HEXAGON_MINING',
+  CASINO_WHEEL: 'CASINO_WHEEL',
+  SLOT_MACHINE: 'SLOT_MACHINE'
+};
 
 exports.Prisma.ModelName = {
   Partner: 'Partner',
