@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Partner {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  EmbedToken EmbedToken[]
+  GameConfig GameConfig[]
+}
+
+model GameSession {
+  id               String           @id @default(cuid())
+  playerIdentifier String
+  gameConfigId     String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  AnalyticsEvent   AnalyticsEvent[]
+  GameAction       GameAction[]
+  GameConfig       GameConfig       @relation(fields: [gameConfigId], references: [id])
+
+  @@index([playerIdentifier])
+}
+
+model AnalyticsEvent {
+  id            String      @id
+  gameSessionId String
+  eventType     String
+  payload       Json
+  createdAt     DateTime    @default(now())
+  GameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+}
+
+model EmbedToken {
+  id          String   @id
+  token       String   @unique
+  partnerId   String
+  permissions Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Partner     Partner  @relation(fields: [partnerId], references: [id])
+}
+
+model GameAction {
+  id            String      @id
+  gameSessionId String
+  actionType    String
+  payload       Json
+  createdAt     DateTime    @default(now())
+  GameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+}
+
+model GameConfig {
+  id                      String        @id
+  name                    String        @default("default")
+  partnerId               String?
+  Partner                 Partner?      @relation(fields: [partnerId], references: [id])
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+  backgroundUrl           String?
+  diamondImageUrl         String?
+  dustImageUrl            String?
+  goldImageUrl            String?
+  defaultBid              Int?          @default(100)
+  bidAmounts              Int[]         @default([100, 200, 500])
+  loseSoundUrl            String?
+  movesPerRound           Int           @default(10)
+  multDiamond             Float         @default(5)
+  multGold                Float         @default(3)
+  multOil                 Float         @default(2)
+  oilImageUrl             String?
+  probDiamond             Int           @default(1)
+  probDust                Int           @default(50)
+  probGold                Int           @default(4)
+  probOil                 Int           @default(15)
+  probRock                Int           @default(30)
+  rockImageUrl            String?
+  winSoundUrl             String?
+  mascotImageUrl          String?
+  mascotOnDustImageUrl    String?
+  mascotOnRockImageUrl    String?
+  mascotOnOilImageUrl     String?
+  mascotOnGoldImageUrl    String?
+  mascotOnDiamondImageUrl String?
+  GameSession             GameSession[]
+
+  @@unique([partnerId, name])
+}
+
+model Admin {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  password            String
+  passwordResetToken  String?   @unique
+  passwordResetExpiry DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
