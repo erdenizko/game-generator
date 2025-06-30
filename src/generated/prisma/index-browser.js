@@ -32,27 +32,32 @@ Prisma.PrismaClientKnownRequestError = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)};
+  )
+};
 Prisma.PrismaClientUnknownRequestError = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.PrismaClientRustPanicError = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.PrismaClientInitializationError = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.PrismaClientValidationError = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.Decimal = Decimal
 
 /**
@@ -62,22 +67,26 @@ Prisma.sql = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.empty = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.join = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.raw = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.validator = Public.validator
 
 /**
@@ -87,12 +96,14 @@ Prisma.getExtensionContext = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 Prisma.defineExtension = () => {
   const runtimeName = getRuntime().prettyName;
   throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
 In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+  )
+}
 
 /**
  * Shorthand utilities for JSON filtering
@@ -163,34 +174,51 @@ exports.Prisma.GameActionScalarFieldEnum = {
 exports.Prisma.GameConfigScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  gameType: 'gameType',
   partnerId: 'partnerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   backgroundUrl: 'backgroundUrl',
+  defaultBet: 'defaultBet',
+  betAmounts: 'betAmounts',
+  spinsPerSession: 'spinsPerSession',
+  wallet: 'wallet',
+  winSoundUrl: 'winSoundUrl',
+  loseSoundUrl: 'loseSoundUrl',
+  mascotImageUrl: 'mascotImageUrl',
+  mascotOnWinImageUrl: 'mascotOnWinImageUrl',
+  mascotOnLoseImageUrl: 'mascotOnLoseImageUrl',
+  dustPrizeImageUrl: 'dustPrizeImageUrl',
+  rockPrizeImageUrl: 'rockPrizeImageUrl',
+  oilPrizeImageUrl: 'oilPrizeImageUrl',
+  goldPrizeImageUrl: 'goldPrizeImageUrl',
+  diamondPrizeImageUrl: 'diamondPrizeImageUrl',
+  movesPerRound: 'movesPerRound',
   diamondImageUrl: 'diamondImageUrl',
   dustImageUrl: 'dustImageUrl',
   goldImageUrl: 'goldImageUrl',
-  defaultBid: 'defaultBid',
-  bidAmounts: 'bidAmounts',
-  loseSoundUrl: 'loseSoundUrl',
-  movesPerRound: 'movesPerRound',
-  multDiamond: 'multDiamond',
-  multGold: 'multGold',
-  multOil: 'multOil',
   oilImageUrl: 'oilImageUrl',
-  probDiamond: 'probDiamond',
-  probDust: 'probDust',
-  probGold: 'probGold',
-  probOil: 'probOil',
-  probRock: 'probRock',
   rockImageUrl: 'rockImageUrl',
-  winSoundUrl: 'winSoundUrl',
-  mascotImageUrl: 'mascotImageUrl',
   mascotOnDustImageUrl: 'mascotOnDustImageUrl',
   mascotOnRockImageUrl: 'mascotOnRockImageUrl',
   mascotOnOilImageUrl: 'mascotOnOilImageUrl',
   mascotOnGoldImageUrl: 'mascotOnGoldImageUrl',
-  mascotOnDiamondImageUrl: 'mascotOnDiamondImageUrl'
+  mascotOnDiamondImageUrl: 'mascotOnDiamondImageUrl',
+  probDust: 'probDust',
+  probRock: 'probRock',
+  probOil: 'probOil',
+  probGold: 'probGold',
+  probDiamond: 'probDiamond',
+  multDiamond: 'multDiamond',
+  multGold: 'multGold',
+  multOil: 'multOil',
+  wheelSegments: 'wheelSegments',
+  wheelSpeed: 'wheelSpeed',
+  wheelDuration: 'wheelDuration',
+  slotReels: 'slotReels',
+  slotSymbols: 'slotSymbols',
+  slotPaylines: 'slotPaylines',
+  autoSpin: 'autoSpin'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
@@ -212,6 +240,11 @@ exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -227,7 +260,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.GameType = exports.$Enums.GameType = {
+  HEXAGON_MINING: 'HEXAGON_MINING',
+  CASINO_WHEEL: 'CASINO_WHEEL',
+  SLOT_MACHINE: 'SLOT_MACHINE'
+};
 
 exports.Prisma.ModelName = {
   Partner: 'Partner',

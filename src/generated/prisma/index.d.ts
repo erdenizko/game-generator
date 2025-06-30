@@ -50,6 +50,24 @@ export type GameConfig = $Result.DefaultSelection<Prisma.$GameConfigPayload>
 export type Admin = $Result.DefaultSelection<Prisma.$AdminPayload>
 
 /**
+ * Enums
+ */
+export namespace $Enums {
+  export const GameType: {
+  HEXAGON_MINING: 'HEXAGON_MINING',
+  CASINO_WHEEL: 'CASINO_WHEEL',
+  SLOT_MACHINE: 'SLOT_MACHINE'
+};
+
+export type GameType = (typeof GameType)[keyof typeof GameType]
+
+}
+
+export type GameType = $Enums.GameType
+
+export const GameType: typeof $Enums.GameType
+
+/**
  * ##  Prisma Client ʲˢ
  *
  * Type-safe database client for TypeScript & Node.js
@@ -479,7 +497,7 @@ export namespace Prisma {
   ? False
   : T extends Uint8Array
   ? False
-  : T extends BigInt
+  : T extends bigint
   ? False
   : T extends object
   ? True
@@ -6914,255 +6932,357 @@ export namespace Prisma {
   }
 
   export type GameConfigAvgAggregateOutputType = {
-    defaultBid: number | null
-    bidAmounts: number | null
+    defaultBet: number | null
+    betAmounts: number | null
+    spinsPerSession: number | null
+    wallet: number | null
     movesPerRound: number | null
+    probDust: number | null
+    probRock: number | null
+    probOil: number | null
+    probGold: number | null
+    probDiamond: number | null
     multDiamond: number | null
     multGold: number | null
     multOil: number | null
-    probDiamond: number | null
-    probDust: number | null
-    probGold: number | null
-    probOil: number | null
-    probRock: number | null
+    wheelSpeed: number | null
+    wheelDuration: number | null
   }
 
   export type GameConfigSumAggregateOutputType = {
-    defaultBid: number | null
-    bidAmounts: number[]
+    defaultBet: number | null
+    betAmounts: number[]
+    spinsPerSession: number | null
+    wallet: number | null
     movesPerRound: number | null
+    probDust: number | null
+    probRock: number | null
+    probOil: number | null
+    probGold: number | null
+    probDiamond: number | null
     multDiamond: number | null
     multGold: number | null
     multOil: number | null
-    probDiamond: number | null
-    probDust: number | null
-    probGold: number | null
-    probOil: number | null
-    probRock: number | null
+    wheelSpeed: number | null
+    wheelDuration: number | null
   }
 
   export type GameConfigMinAggregateOutputType = {
     id: string | null
     name: string | null
+    gameType: $Enums.GameType | null
     partnerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     backgroundUrl: string | null
+    defaultBet: number | null
+    spinsPerSession: number | null
+    wallet: number | null
+    winSoundUrl: string | null
+    loseSoundUrl: string | null
+    mascotImageUrl: string | null
+    mascotOnWinImageUrl: string | null
+    mascotOnLoseImageUrl: string | null
+    dustPrizeImageUrl: string | null
+    rockPrizeImageUrl: string | null
+    oilPrizeImageUrl: string | null
+    goldPrizeImageUrl: string | null
+    diamondPrizeImageUrl: string | null
+    movesPerRound: number | null
     diamondImageUrl: string | null
     dustImageUrl: string | null
     goldImageUrl: string | null
-    defaultBid: number | null
-    loseSoundUrl: string | null
-    movesPerRound: number | null
-    multDiamond: number | null
-    multGold: number | null
-    multOil: number | null
     oilImageUrl: string | null
-    probDiamond: number | null
-    probDust: number | null
-    probGold: number | null
-    probOil: number | null
-    probRock: number | null
     rockImageUrl: string | null
-    winSoundUrl: string | null
-    mascotImageUrl: string | null
     mascotOnDustImageUrl: string | null
     mascotOnRockImageUrl: string | null
     mascotOnOilImageUrl: string | null
     mascotOnGoldImageUrl: string | null
     mascotOnDiamondImageUrl: string | null
+    probDust: number | null
+    probRock: number | null
+    probOil: number | null
+    probGold: number | null
+    probDiamond: number | null
+    multDiamond: number | null
+    multGold: number | null
+    multOil: number | null
+    wheelSpeed: number | null
+    wheelDuration: number | null
+    autoSpin: boolean | null
   }
 
   export type GameConfigMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    gameType: $Enums.GameType | null
     partnerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     backgroundUrl: string | null
+    defaultBet: number | null
+    spinsPerSession: number | null
+    wallet: number | null
+    winSoundUrl: string | null
+    loseSoundUrl: string | null
+    mascotImageUrl: string | null
+    mascotOnWinImageUrl: string | null
+    mascotOnLoseImageUrl: string | null
+    dustPrizeImageUrl: string | null
+    rockPrizeImageUrl: string | null
+    oilPrizeImageUrl: string | null
+    goldPrizeImageUrl: string | null
+    diamondPrizeImageUrl: string | null
+    movesPerRound: number | null
     diamondImageUrl: string | null
     dustImageUrl: string | null
     goldImageUrl: string | null
-    defaultBid: number | null
-    loseSoundUrl: string | null
-    movesPerRound: number | null
-    multDiamond: number | null
-    multGold: number | null
-    multOil: number | null
     oilImageUrl: string | null
-    probDiamond: number | null
-    probDust: number | null
-    probGold: number | null
-    probOil: number | null
-    probRock: number | null
     rockImageUrl: string | null
-    winSoundUrl: string | null
-    mascotImageUrl: string | null
     mascotOnDustImageUrl: string | null
     mascotOnRockImageUrl: string | null
     mascotOnOilImageUrl: string | null
     mascotOnGoldImageUrl: string | null
     mascotOnDiamondImageUrl: string | null
+    probDust: number | null
+    probRock: number | null
+    probOil: number | null
+    probGold: number | null
+    probDiamond: number | null
+    multDiamond: number | null
+    multGold: number | null
+    multOil: number | null
+    wheelSpeed: number | null
+    wheelDuration: number | null
+    autoSpin: boolean | null
   }
 
   export type GameConfigCountAggregateOutputType = {
     id: number
     name: number
+    gameType: number
     partnerId: number
     createdAt: number
     updatedAt: number
     backgroundUrl: number
+    defaultBet: number
+    betAmounts: number
+    spinsPerSession: number
+    wallet: number
+    winSoundUrl: number
+    loseSoundUrl: number
+    mascotImageUrl: number
+    mascotOnWinImageUrl: number
+    mascotOnLoseImageUrl: number
+    dustPrizeImageUrl: number
+    rockPrizeImageUrl: number
+    oilPrizeImageUrl: number
+    goldPrizeImageUrl: number
+    diamondPrizeImageUrl: number
+    movesPerRound: number
     diamondImageUrl: number
     dustImageUrl: number
     goldImageUrl: number
-    defaultBid: number
-    bidAmounts: number
-    loseSoundUrl: number
-    movesPerRound: number
-    multDiamond: number
-    multGold: number
-    multOil: number
     oilImageUrl: number
-    probDiamond: number
-    probDust: number
-    probGold: number
-    probOil: number
-    probRock: number
     rockImageUrl: number
-    winSoundUrl: number
-    mascotImageUrl: number
     mascotOnDustImageUrl: number
     mascotOnRockImageUrl: number
     mascotOnOilImageUrl: number
     mascotOnGoldImageUrl: number
     mascotOnDiamondImageUrl: number
+    probDust: number
+    probRock: number
+    probOil: number
+    probGold: number
+    probDiamond: number
+    multDiamond: number
+    multGold: number
+    multOil: number
+    wheelSegments: number
+    wheelSpeed: number
+    wheelDuration: number
+    slotReels: number
+    slotSymbols: number
+    slotPaylines: number
+    autoSpin: number
     _all: number
   }
 
 
   export type GameConfigAvgAggregateInputType = {
-    defaultBid?: true
-    bidAmounts?: true
+    defaultBet?: true
+    betAmounts?: true
+    spinsPerSession?: true
+    wallet?: true
     movesPerRound?: true
+    probDust?: true
+    probRock?: true
+    probOil?: true
+    probGold?: true
+    probDiamond?: true
     multDiamond?: true
     multGold?: true
     multOil?: true
-    probDiamond?: true
-    probDust?: true
-    probGold?: true
-    probOil?: true
-    probRock?: true
+    wheelSpeed?: true
+    wheelDuration?: true
   }
 
   export type GameConfigSumAggregateInputType = {
-    defaultBid?: true
-    bidAmounts?: true
+    defaultBet?: true
+    betAmounts?: true
+    spinsPerSession?: true
+    wallet?: true
     movesPerRound?: true
+    probDust?: true
+    probRock?: true
+    probOil?: true
+    probGold?: true
+    probDiamond?: true
     multDiamond?: true
     multGold?: true
     multOil?: true
-    probDiamond?: true
-    probDust?: true
-    probGold?: true
-    probOil?: true
-    probRock?: true
+    wheelSpeed?: true
+    wheelDuration?: true
   }
 
   export type GameConfigMinAggregateInputType = {
     id?: true
     name?: true
+    gameType?: true
     partnerId?: true
     createdAt?: true
     updatedAt?: true
     backgroundUrl?: true
+    defaultBet?: true
+    spinsPerSession?: true
+    wallet?: true
+    winSoundUrl?: true
+    loseSoundUrl?: true
+    mascotImageUrl?: true
+    mascotOnWinImageUrl?: true
+    mascotOnLoseImageUrl?: true
+    dustPrizeImageUrl?: true
+    rockPrizeImageUrl?: true
+    oilPrizeImageUrl?: true
+    goldPrizeImageUrl?: true
+    diamondPrizeImageUrl?: true
+    movesPerRound?: true
     diamondImageUrl?: true
     dustImageUrl?: true
     goldImageUrl?: true
-    defaultBid?: true
-    loseSoundUrl?: true
-    movesPerRound?: true
-    multDiamond?: true
-    multGold?: true
-    multOil?: true
     oilImageUrl?: true
-    probDiamond?: true
-    probDust?: true
-    probGold?: true
-    probOil?: true
-    probRock?: true
     rockImageUrl?: true
-    winSoundUrl?: true
-    mascotImageUrl?: true
     mascotOnDustImageUrl?: true
     mascotOnRockImageUrl?: true
     mascotOnOilImageUrl?: true
     mascotOnGoldImageUrl?: true
     mascotOnDiamondImageUrl?: true
+    probDust?: true
+    probRock?: true
+    probOil?: true
+    probGold?: true
+    probDiamond?: true
+    multDiamond?: true
+    multGold?: true
+    multOil?: true
+    wheelSpeed?: true
+    wheelDuration?: true
+    autoSpin?: true
   }
 
   export type GameConfigMaxAggregateInputType = {
     id?: true
     name?: true
+    gameType?: true
     partnerId?: true
     createdAt?: true
     updatedAt?: true
     backgroundUrl?: true
+    defaultBet?: true
+    spinsPerSession?: true
+    wallet?: true
+    winSoundUrl?: true
+    loseSoundUrl?: true
+    mascotImageUrl?: true
+    mascotOnWinImageUrl?: true
+    mascotOnLoseImageUrl?: true
+    dustPrizeImageUrl?: true
+    rockPrizeImageUrl?: true
+    oilPrizeImageUrl?: true
+    goldPrizeImageUrl?: true
+    diamondPrizeImageUrl?: true
+    movesPerRound?: true
     diamondImageUrl?: true
     dustImageUrl?: true
     goldImageUrl?: true
-    defaultBid?: true
-    loseSoundUrl?: true
-    movesPerRound?: true
-    multDiamond?: true
-    multGold?: true
-    multOil?: true
     oilImageUrl?: true
-    probDiamond?: true
-    probDust?: true
-    probGold?: true
-    probOil?: true
-    probRock?: true
     rockImageUrl?: true
-    winSoundUrl?: true
-    mascotImageUrl?: true
     mascotOnDustImageUrl?: true
     mascotOnRockImageUrl?: true
     mascotOnOilImageUrl?: true
     mascotOnGoldImageUrl?: true
     mascotOnDiamondImageUrl?: true
+    probDust?: true
+    probRock?: true
+    probOil?: true
+    probGold?: true
+    probDiamond?: true
+    multDiamond?: true
+    multGold?: true
+    multOil?: true
+    wheelSpeed?: true
+    wheelDuration?: true
+    autoSpin?: true
   }
 
   export type GameConfigCountAggregateInputType = {
     id?: true
     name?: true
+    gameType?: true
     partnerId?: true
     createdAt?: true
     updatedAt?: true
     backgroundUrl?: true
+    defaultBet?: true
+    betAmounts?: true
+    spinsPerSession?: true
+    wallet?: true
+    winSoundUrl?: true
+    loseSoundUrl?: true
+    mascotImageUrl?: true
+    mascotOnWinImageUrl?: true
+    mascotOnLoseImageUrl?: true
+    dustPrizeImageUrl?: true
+    rockPrizeImageUrl?: true
+    oilPrizeImageUrl?: true
+    goldPrizeImageUrl?: true
+    diamondPrizeImageUrl?: true
+    movesPerRound?: true
     diamondImageUrl?: true
     dustImageUrl?: true
     goldImageUrl?: true
-    defaultBid?: true
-    bidAmounts?: true
-    loseSoundUrl?: true
-    movesPerRound?: true
-    multDiamond?: true
-    multGold?: true
-    multOil?: true
     oilImageUrl?: true
-    probDiamond?: true
-    probDust?: true
-    probGold?: true
-    probOil?: true
-    probRock?: true
     rockImageUrl?: true
-    winSoundUrl?: true
-    mascotImageUrl?: true
     mascotOnDustImageUrl?: true
     mascotOnRockImageUrl?: true
     mascotOnOilImageUrl?: true
     mascotOnGoldImageUrl?: true
     mascotOnDiamondImageUrl?: true
+    probDust?: true
+    probRock?: true
+    probOil?: true
+    probGold?: true
+    probDiamond?: true
+    multDiamond?: true
+    multGold?: true
+    multOil?: true
+    wheelSegments?: true
+    wheelSpeed?: true
+    wheelDuration?: true
+    slotReels?: true
+    slotSymbols?: true
+    slotPaylines?: true
+    autoSpin?: true
     _all?: true
   }
 
@@ -7255,34 +7375,51 @@ export namespace Prisma {
   export type GameConfigGroupByOutputType = {
     id: string
     name: string
+    gameType: $Enums.GameType
     partnerId: string | null
     createdAt: Date
     updatedAt: Date
     backgroundUrl: string | null
+    defaultBet: number | null
+    betAmounts: number[]
+    spinsPerSession: number
+    wallet: number
+    winSoundUrl: string | null
+    loseSoundUrl: string | null
+    mascotImageUrl: string | null
+    mascotOnWinImageUrl: string | null
+    mascotOnLoseImageUrl: string | null
+    dustPrizeImageUrl: string | null
+    rockPrizeImageUrl: string | null
+    oilPrizeImageUrl: string | null
+    goldPrizeImageUrl: string | null
+    diamondPrizeImageUrl: string | null
+    movesPerRound: number
     diamondImageUrl: string | null
     dustImageUrl: string | null
     goldImageUrl: string | null
-    defaultBid: number | null
-    bidAmounts: number[]
-    loseSoundUrl: string | null
-    movesPerRound: number
-    multDiamond: number
-    multGold: number
-    multOil: number
     oilImageUrl: string | null
-    probDiamond: number
-    probDust: number
-    probGold: number
-    probOil: number
-    probRock: number
     rockImageUrl: string | null
-    winSoundUrl: string | null
-    mascotImageUrl: string | null
     mascotOnDustImageUrl: string | null
     mascotOnRockImageUrl: string | null
     mascotOnOilImageUrl: string | null
     mascotOnGoldImageUrl: string | null
     mascotOnDiamondImageUrl: string | null
+    probDust: number
+    probRock: number
+    probOil: number
+    probGold: number
+    probDiamond: number
+    multDiamond: number
+    multGold: number
+    multOil: number
+    wheelSegments: JsonValue | null
+    wheelSpeed: number | null
+    wheelDuration: number | null
+    slotReels: JsonValue | null
+    slotSymbols: JsonValue | null
+    slotPaylines: JsonValue | null
+    autoSpin: boolean
     _count: GameConfigCountAggregateOutputType | null
     _avg: GameConfigAvgAggregateOutputType | null
     _sum: GameConfigSumAggregateOutputType | null
@@ -7307,34 +7444,51 @@ export namespace Prisma {
   export type GameConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     backgroundUrl?: boolean
+    defaultBet?: boolean
+    betAmounts?: boolean
+    spinsPerSession?: boolean
+    wallet?: boolean
+    winSoundUrl?: boolean
+    loseSoundUrl?: boolean
+    mascotImageUrl?: boolean
+    mascotOnWinImageUrl?: boolean
+    mascotOnLoseImageUrl?: boolean
+    dustPrizeImageUrl?: boolean
+    rockPrizeImageUrl?: boolean
+    oilPrizeImageUrl?: boolean
+    goldPrizeImageUrl?: boolean
+    diamondPrizeImageUrl?: boolean
+    movesPerRound?: boolean
     diamondImageUrl?: boolean
     dustImageUrl?: boolean
     goldImageUrl?: boolean
-    defaultBid?: boolean
-    bidAmounts?: boolean
-    loseSoundUrl?: boolean
-    movesPerRound?: boolean
-    multDiamond?: boolean
-    multGold?: boolean
-    multOil?: boolean
     oilImageUrl?: boolean
-    probDiamond?: boolean
-    probDust?: boolean
-    probGold?: boolean
-    probOil?: boolean
-    probRock?: boolean
     rockImageUrl?: boolean
-    winSoundUrl?: boolean
-    mascotImageUrl?: boolean
     mascotOnDustImageUrl?: boolean
     mascotOnRockImageUrl?: boolean
     mascotOnOilImageUrl?: boolean
     mascotOnGoldImageUrl?: boolean
     mascotOnDiamondImageUrl?: boolean
+    probDust?: boolean
+    probRock?: boolean
+    probOil?: boolean
+    probGold?: boolean
+    probDiamond?: boolean
+    multDiamond?: boolean
+    multGold?: boolean
+    multOil?: boolean
+    wheelSegments?: boolean
+    wheelSpeed?: boolean
+    wheelDuration?: boolean
+    slotReels?: boolean
+    slotSymbols?: boolean
+    slotPaylines?: boolean
+    autoSpin?: boolean
     Partner?: boolean | GameConfig$PartnerArgs<ExtArgs>
     GameSession?: boolean | GameConfig$GameSessionArgs<ExtArgs>
     _count?: boolean | GameConfigCountOutputTypeDefaultArgs<ExtArgs>
@@ -7343,105 +7497,156 @@ export namespace Prisma {
   export type GameConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     backgroundUrl?: boolean
+    defaultBet?: boolean
+    betAmounts?: boolean
+    spinsPerSession?: boolean
+    wallet?: boolean
+    winSoundUrl?: boolean
+    loseSoundUrl?: boolean
+    mascotImageUrl?: boolean
+    mascotOnWinImageUrl?: boolean
+    mascotOnLoseImageUrl?: boolean
+    dustPrizeImageUrl?: boolean
+    rockPrizeImageUrl?: boolean
+    oilPrizeImageUrl?: boolean
+    goldPrizeImageUrl?: boolean
+    diamondPrizeImageUrl?: boolean
+    movesPerRound?: boolean
     diamondImageUrl?: boolean
     dustImageUrl?: boolean
     goldImageUrl?: boolean
-    defaultBid?: boolean
-    bidAmounts?: boolean
-    loseSoundUrl?: boolean
-    movesPerRound?: boolean
-    multDiamond?: boolean
-    multGold?: boolean
-    multOil?: boolean
     oilImageUrl?: boolean
-    probDiamond?: boolean
-    probDust?: boolean
-    probGold?: boolean
-    probOil?: boolean
-    probRock?: boolean
     rockImageUrl?: boolean
-    winSoundUrl?: boolean
-    mascotImageUrl?: boolean
     mascotOnDustImageUrl?: boolean
     mascotOnRockImageUrl?: boolean
     mascotOnOilImageUrl?: boolean
     mascotOnGoldImageUrl?: boolean
     mascotOnDiamondImageUrl?: boolean
+    probDust?: boolean
+    probRock?: boolean
+    probOil?: boolean
+    probGold?: boolean
+    probDiamond?: boolean
+    multDiamond?: boolean
+    multGold?: boolean
+    multOil?: boolean
+    wheelSegments?: boolean
+    wheelSpeed?: boolean
+    wheelDuration?: boolean
+    slotReels?: boolean
+    slotSymbols?: boolean
+    slotPaylines?: boolean
+    autoSpin?: boolean
     Partner?: boolean | GameConfig$PartnerArgs<ExtArgs>
   }, ExtArgs["result"]["gameConfig"]>
 
   export type GameConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     backgroundUrl?: boolean
+    defaultBet?: boolean
+    betAmounts?: boolean
+    spinsPerSession?: boolean
+    wallet?: boolean
+    winSoundUrl?: boolean
+    loseSoundUrl?: boolean
+    mascotImageUrl?: boolean
+    mascotOnWinImageUrl?: boolean
+    mascotOnLoseImageUrl?: boolean
+    dustPrizeImageUrl?: boolean
+    rockPrizeImageUrl?: boolean
+    oilPrizeImageUrl?: boolean
+    goldPrizeImageUrl?: boolean
+    diamondPrizeImageUrl?: boolean
+    movesPerRound?: boolean
     diamondImageUrl?: boolean
     dustImageUrl?: boolean
     goldImageUrl?: boolean
-    defaultBid?: boolean
-    bidAmounts?: boolean
-    loseSoundUrl?: boolean
-    movesPerRound?: boolean
-    multDiamond?: boolean
-    multGold?: boolean
-    multOil?: boolean
     oilImageUrl?: boolean
-    probDiamond?: boolean
-    probDust?: boolean
-    probGold?: boolean
-    probOil?: boolean
-    probRock?: boolean
     rockImageUrl?: boolean
-    winSoundUrl?: boolean
-    mascotImageUrl?: boolean
     mascotOnDustImageUrl?: boolean
     mascotOnRockImageUrl?: boolean
     mascotOnOilImageUrl?: boolean
     mascotOnGoldImageUrl?: boolean
     mascotOnDiamondImageUrl?: boolean
+    probDust?: boolean
+    probRock?: boolean
+    probOil?: boolean
+    probGold?: boolean
+    probDiamond?: boolean
+    multDiamond?: boolean
+    multGold?: boolean
+    multOil?: boolean
+    wheelSegments?: boolean
+    wheelSpeed?: boolean
+    wheelDuration?: boolean
+    slotReels?: boolean
+    slotSymbols?: boolean
+    slotPaylines?: boolean
+    autoSpin?: boolean
     Partner?: boolean | GameConfig$PartnerArgs<ExtArgs>
   }, ExtArgs["result"]["gameConfig"]>
 
   export type GameConfigSelectScalar = {
     id?: boolean
     name?: boolean
+    gameType?: boolean
     partnerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     backgroundUrl?: boolean
+    defaultBet?: boolean
+    betAmounts?: boolean
+    spinsPerSession?: boolean
+    wallet?: boolean
+    winSoundUrl?: boolean
+    loseSoundUrl?: boolean
+    mascotImageUrl?: boolean
+    mascotOnWinImageUrl?: boolean
+    mascotOnLoseImageUrl?: boolean
+    dustPrizeImageUrl?: boolean
+    rockPrizeImageUrl?: boolean
+    oilPrizeImageUrl?: boolean
+    goldPrizeImageUrl?: boolean
+    diamondPrizeImageUrl?: boolean
+    movesPerRound?: boolean
     diamondImageUrl?: boolean
     dustImageUrl?: boolean
     goldImageUrl?: boolean
-    defaultBid?: boolean
-    bidAmounts?: boolean
-    loseSoundUrl?: boolean
-    movesPerRound?: boolean
-    multDiamond?: boolean
-    multGold?: boolean
-    multOil?: boolean
     oilImageUrl?: boolean
-    probDiamond?: boolean
-    probDust?: boolean
-    probGold?: boolean
-    probOil?: boolean
-    probRock?: boolean
     rockImageUrl?: boolean
-    winSoundUrl?: boolean
-    mascotImageUrl?: boolean
     mascotOnDustImageUrl?: boolean
     mascotOnRockImageUrl?: boolean
     mascotOnOilImageUrl?: boolean
     mascotOnGoldImageUrl?: boolean
     mascotOnDiamondImageUrl?: boolean
+    probDust?: boolean
+    probRock?: boolean
+    probOil?: boolean
+    probGold?: boolean
+    probDiamond?: boolean
+    multDiamond?: boolean
+    multGold?: boolean
+    multOil?: boolean
+    wheelSegments?: boolean
+    wheelSpeed?: boolean
+    wheelDuration?: boolean
+    slotReels?: boolean
+    slotSymbols?: boolean
+    slotPaylines?: boolean
+    autoSpin?: boolean
   }
 
-  export type GameConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "partnerId" | "createdAt" | "updatedAt" | "backgroundUrl" | "diamondImageUrl" | "dustImageUrl" | "goldImageUrl" | "defaultBid" | "bidAmounts" | "loseSoundUrl" | "movesPerRound" | "multDiamond" | "multGold" | "multOil" | "oilImageUrl" | "probDiamond" | "probDust" | "probGold" | "probOil" | "probRock" | "rockImageUrl" | "winSoundUrl" | "mascotImageUrl" | "mascotOnDustImageUrl" | "mascotOnRockImageUrl" | "mascotOnOilImageUrl" | "mascotOnGoldImageUrl" | "mascotOnDiamondImageUrl", ExtArgs["result"]["gameConfig"]>
+  export type GameConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "gameType" | "partnerId" | "createdAt" | "updatedAt" | "backgroundUrl" | "defaultBet" | "betAmounts" | "spinsPerSession" | "wallet" | "winSoundUrl" | "loseSoundUrl" | "mascotImageUrl" | "mascotOnWinImageUrl" | "mascotOnLoseImageUrl" | "dustPrizeImageUrl" | "rockPrizeImageUrl" | "oilPrizeImageUrl" | "goldPrizeImageUrl" | "diamondPrizeImageUrl" | "movesPerRound" | "diamondImageUrl" | "dustImageUrl" | "goldImageUrl" | "oilImageUrl" | "rockImageUrl" | "mascotOnDustImageUrl" | "mascotOnRockImageUrl" | "mascotOnOilImageUrl" | "mascotOnGoldImageUrl" | "mascotOnDiamondImageUrl" | "probDust" | "probRock" | "probOil" | "probGold" | "probDiamond" | "multDiamond" | "multGold" | "multOil" | "wheelSegments" | "wheelSpeed" | "wheelDuration" | "slotReels" | "slotSymbols" | "slotPaylines" | "autoSpin", ExtArgs["result"]["gameConfig"]>
   export type GameConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Partner?: boolean | GameConfig$PartnerArgs<ExtArgs>
     GameSession?: boolean | GameConfig$GameSessionArgs<ExtArgs>
@@ -7463,34 +7668,51 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      gameType: $Enums.GameType
       partnerId: string | null
       createdAt: Date
       updatedAt: Date
       backgroundUrl: string | null
+      defaultBet: number | null
+      betAmounts: number[]
+      spinsPerSession: number
+      wallet: number
+      winSoundUrl: string | null
+      loseSoundUrl: string | null
+      mascotImageUrl: string | null
+      mascotOnWinImageUrl: string | null
+      mascotOnLoseImageUrl: string | null
+      dustPrizeImageUrl: string | null
+      rockPrizeImageUrl: string | null
+      oilPrizeImageUrl: string | null
+      goldPrizeImageUrl: string | null
+      diamondPrizeImageUrl: string | null
+      movesPerRound: number
       diamondImageUrl: string | null
       dustImageUrl: string | null
       goldImageUrl: string | null
-      defaultBid: number | null
-      bidAmounts: number[]
-      loseSoundUrl: string | null
-      movesPerRound: number
-      multDiamond: number
-      multGold: number
-      multOil: number
       oilImageUrl: string | null
-      probDiamond: number
-      probDust: number
-      probGold: number
-      probOil: number
-      probRock: number
       rockImageUrl: string | null
-      winSoundUrl: string | null
-      mascotImageUrl: string | null
       mascotOnDustImageUrl: string | null
       mascotOnRockImageUrl: string | null
       mascotOnOilImageUrl: string | null
       mascotOnGoldImageUrl: string | null
       mascotOnDiamondImageUrl: string | null
+      probDust: number
+      probRock: number
+      probOil: number
+      probGold: number
+      probDiamond: number
+      multDiamond: number
+      multGold: number
+      multOil: number
+      wheelSegments: Prisma.JsonValue | null
+      wheelSpeed: number | null
+      wheelDuration: number | null
+      slotReels: Prisma.JsonValue | null
+      slotSymbols: Prisma.JsonValue | null
+      slotPaylines: Prisma.JsonValue | null
+      autoSpin: boolean
     }, ExtArgs["result"]["gameConfig"]>
     composites: {}
   }
@@ -7918,34 +8140,51 @@ export namespace Prisma {
   interface GameConfigFieldRefs {
     readonly id: FieldRef<"GameConfig", 'String'>
     readonly name: FieldRef<"GameConfig", 'String'>
+    readonly gameType: FieldRef<"GameConfig", 'GameType'>
     readonly partnerId: FieldRef<"GameConfig", 'String'>
     readonly createdAt: FieldRef<"GameConfig", 'DateTime'>
     readonly updatedAt: FieldRef<"GameConfig", 'DateTime'>
     readonly backgroundUrl: FieldRef<"GameConfig", 'String'>
+    readonly defaultBet: FieldRef<"GameConfig", 'Int'>
+    readonly betAmounts: FieldRef<"GameConfig", 'Int[]'>
+    readonly spinsPerSession: FieldRef<"GameConfig", 'Int'>
+    readonly wallet: FieldRef<"GameConfig", 'Int'>
+    readonly winSoundUrl: FieldRef<"GameConfig", 'String'>
+    readonly loseSoundUrl: FieldRef<"GameConfig", 'String'>
+    readonly mascotImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly mascotOnWinImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly mascotOnLoseImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly dustPrizeImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly rockPrizeImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly oilPrizeImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly goldPrizeImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly diamondPrizeImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly movesPerRound: FieldRef<"GameConfig", 'Int'>
     readonly diamondImageUrl: FieldRef<"GameConfig", 'String'>
     readonly dustImageUrl: FieldRef<"GameConfig", 'String'>
     readonly goldImageUrl: FieldRef<"GameConfig", 'String'>
-    readonly defaultBid: FieldRef<"GameConfig", 'Int'>
-    readonly bidAmounts: FieldRef<"GameConfig", 'Int[]'>
-    readonly loseSoundUrl: FieldRef<"GameConfig", 'String'>
-    readonly movesPerRound: FieldRef<"GameConfig", 'Int'>
-    readonly multDiamond: FieldRef<"GameConfig", 'Float'>
-    readonly multGold: FieldRef<"GameConfig", 'Float'>
-    readonly multOil: FieldRef<"GameConfig", 'Float'>
     readonly oilImageUrl: FieldRef<"GameConfig", 'String'>
-    readonly probDiamond: FieldRef<"GameConfig", 'Int'>
-    readonly probDust: FieldRef<"GameConfig", 'Int'>
-    readonly probGold: FieldRef<"GameConfig", 'Int'>
-    readonly probOil: FieldRef<"GameConfig", 'Int'>
-    readonly probRock: FieldRef<"GameConfig", 'Int'>
     readonly rockImageUrl: FieldRef<"GameConfig", 'String'>
-    readonly winSoundUrl: FieldRef<"GameConfig", 'String'>
-    readonly mascotImageUrl: FieldRef<"GameConfig", 'String'>
     readonly mascotOnDustImageUrl: FieldRef<"GameConfig", 'String'>
     readonly mascotOnRockImageUrl: FieldRef<"GameConfig", 'String'>
     readonly mascotOnOilImageUrl: FieldRef<"GameConfig", 'String'>
     readonly mascotOnGoldImageUrl: FieldRef<"GameConfig", 'String'>
     readonly mascotOnDiamondImageUrl: FieldRef<"GameConfig", 'String'>
+    readonly probDust: FieldRef<"GameConfig", 'Int'>
+    readonly probRock: FieldRef<"GameConfig", 'Int'>
+    readonly probOil: FieldRef<"GameConfig", 'Int'>
+    readonly probGold: FieldRef<"GameConfig", 'Int'>
+    readonly probDiamond: FieldRef<"GameConfig", 'Int'>
+    readonly multDiamond: FieldRef<"GameConfig", 'Float'>
+    readonly multGold: FieldRef<"GameConfig", 'Float'>
+    readonly multOil: FieldRef<"GameConfig", 'Float'>
+    readonly wheelSegments: FieldRef<"GameConfig", 'Json'>
+    readonly wheelSpeed: FieldRef<"GameConfig", 'Float'>
+    readonly wheelDuration: FieldRef<"GameConfig", 'Int'>
+    readonly slotReels: FieldRef<"GameConfig", 'Json'>
+    readonly slotSymbols: FieldRef<"GameConfig", 'Json'>
+    readonly slotPaylines: FieldRef<"GameConfig", 'Json'>
+    readonly autoSpin: FieldRef<"GameConfig", 'Boolean'>
   }
     
 
@@ -9496,34 +9735,51 @@ export namespace Prisma {
   export const GameConfigScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    gameType: 'gameType',
     partnerId: 'partnerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     backgroundUrl: 'backgroundUrl',
+    defaultBet: 'defaultBet',
+    betAmounts: 'betAmounts',
+    spinsPerSession: 'spinsPerSession',
+    wallet: 'wallet',
+    winSoundUrl: 'winSoundUrl',
+    loseSoundUrl: 'loseSoundUrl',
+    mascotImageUrl: 'mascotImageUrl',
+    mascotOnWinImageUrl: 'mascotOnWinImageUrl',
+    mascotOnLoseImageUrl: 'mascotOnLoseImageUrl',
+    dustPrizeImageUrl: 'dustPrizeImageUrl',
+    rockPrizeImageUrl: 'rockPrizeImageUrl',
+    oilPrizeImageUrl: 'oilPrizeImageUrl',
+    goldPrizeImageUrl: 'goldPrizeImageUrl',
+    diamondPrizeImageUrl: 'diamondPrizeImageUrl',
+    movesPerRound: 'movesPerRound',
     diamondImageUrl: 'diamondImageUrl',
     dustImageUrl: 'dustImageUrl',
     goldImageUrl: 'goldImageUrl',
-    defaultBid: 'defaultBid',
-    bidAmounts: 'bidAmounts',
-    loseSoundUrl: 'loseSoundUrl',
-    movesPerRound: 'movesPerRound',
-    multDiamond: 'multDiamond',
-    multGold: 'multGold',
-    multOil: 'multOil',
     oilImageUrl: 'oilImageUrl',
-    probDiamond: 'probDiamond',
-    probDust: 'probDust',
-    probGold: 'probGold',
-    probOil: 'probOil',
-    probRock: 'probRock',
     rockImageUrl: 'rockImageUrl',
-    winSoundUrl: 'winSoundUrl',
-    mascotImageUrl: 'mascotImageUrl',
     mascotOnDustImageUrl: 'mascotOnDustImageUrl',
     mascotOnRockImageUrl: 'mascotOnRockImageUrl',
     mascotOnOilImageUrl: 'mascotOnOilImageUrl',
     mascotOnGoldImageUrl: 'mascotOnGoldImageUrl',
-    mascotOnDiamondImageUrl: 'mascotOnDiamondImageUrl'
+    mascotOnDiamondImageUrl: 'mascotOnDiamondImageUrl',
+    probDust: 'probDust',
+    probRock: 'probRock',
+    probOil: 'probOil',
+    probGold: 'probGold',
+    probDiamond: 'probDiamond',
+    multDiamond: 'multDiamond',
+    multGold: 'multGold',
+    multOil: 'multOil',
+    wheelSegments: 'wheelSegments',
+    wheelSpeed: 'wheelSpeed',
+    wheelDuration: 'wheelDuration',
+    slotReels: 'slotReels',
+    slotSymbols: 'slotSymbols',
+    slotPaylines: 'slotPaylines',
+    autoSpin: 'autoSpin'
   };
 
   export type GameConfigScalarFieldEnum = (typeof GameConfigScalarFieldEnum)[keyof typeof GameConfigScalarFieldEnum]
@@ -9555,6 +9811,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -9630,6 +9894,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'GameType'
+   */
+  export type EnumGameTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameType'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameType[]'
+   */
+  export type ListEnumGameTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -9654,6 +9932,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
   /**
    * Deep Input Types
@@ -9950,34 +10235,51 @@ export namespace Prisma {
     NOT?: GameConfigWhereInput | GameConfigWhereInput[]
     id?: StringFilter<"GameConfig"> | string
     name?: StringFilter<"GameConfig"> | string
+    gameType?: EnumGameTypeFilter<"GameConfig"> | $Enums.GameType
     partnerId?: StringNullableFilter<"GameConfig"> | string | null
     createdAt?: DateTimeFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeFilter<"GameConfig"> | Date | string
     backgroundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    defaultBet?: IntNullableFilter<"GameConfig"> | number | null
+    betAmounts?: IntNullableListFilter<"GameConfig">
+    spinsPerSession?: IntFilter<"GameConfig"> | number
+    wallet?: IntFilter<"GameConfig"> | number
+    winSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    loseSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotOnWinImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotOnLoseImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    dustPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    rockPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    oilPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    goldPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    diamondPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    movesPerRound?: IntFilter<"GameConfig"> | number
     diamondImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     dustImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     goldImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    defaultBid?: IntNullableFilter<"GameConfig"> | number | null
-    bidAmounts?: IntNullableListFilter<"GameConfig">
-    loseSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
-    movesPerRound?: IntFilter<"GameConfig"> | number
-    multDiamond?: FloatFilter<"GameConfig"> | number
-    multGold?: FloatFilter<"GameConfig"> | number
-    multOil?: FloatFilter<"GameConfig"> | number
     oilImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    probDiamond?: IntFilter<"GameConfig"> | number
-    probDust?: IntFilter<"GameConfig"> | number
-    probGold?: IntFilter<"GameConfig"> | number
-    probOil?: IntFilter<"GameConfig"> | number
-    probRock?: IntFilter<"GameConfig"> | number
     rockImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    winSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
-    mascotImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnDustImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnRockImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnOilImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnGoldImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnDiamondImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    probDust?: IntFilter<"GameConfig"> | number
+    probRock?: IntFilter<"GameConfig"> | number
+    probOil?: IntFilter<"GameConfig"> | number
+    probGold?: IntFilter<"GameConfig"> | number
+    probDiamond?: IntFilter<"GameConfig"> | number
+    multDiamond?: FloatFilter<"GameConfig"> | number
+    multGold?: FloatFilter<"GameConfig"> | number
+    multOil?: FloatFilter<"GameConfig"> | number
+    wheelSegments?: JsonNullableFilter<"GameConfig">
+    wheelSpeed?: FloatNullableFilter<"GameConfig"> | number | null
+    wheelDuration?: IntNullableFilter<"GameConfig"> | number | null
+    slotReels?: JsonNullableFilter<"GameConfig">
+    slotSymbols?: JsonNullableFilter<"GameConfig">
+    slotPaylines?: JsonNullableFilter<"GameConfig">
+    autoSpin?: BoolFilter<"GameConfig"> | boolean
     Partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
     GameSession?: GameSessionListRelationFilter
   }
@@ -9985,34 +10287,51 @@ export namespace Prisma {
   export type GameConfigOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     backgroundUrl?: SortOrderInput | SortOrder
+    defaultBet?: SortOrderInput | SortOrder
+    betAmounts?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    winSoundUrl?: SortOrderInput | SortOrder
+    loseSoundUrl?: SortOrderInput | SortOrder
+    mascotImageUrl?: SortOrderInput | SortOrder
+    mascotOnWinImageUrl?: SortOrderInput | SortOrder
+    mascotOnLoseImageUrl?: SortOrderInput | SortOrder
+    dustPrizeImageUrl?: SortOrderInput | SortOrder
+    rockPrizeImageUrl?: SortOrderInput | SortOrder
+    oilPrizeImageUrl?: SortOrderInput | SortOrder
+    goldPrizeImageUrl?: SortOrderInput | SortOrder
+    diamondPrizeImageUrl?: SortOrderInput | SortOrder
+    movesPerRound?: SortOrder
     diamondImageUrl?: SortOrderInput | SortOrder
     dustImageUrl?: SortOrderInput | SortOrder
     goldImageUrl?: SortOrderInput | SortOrder
-    defaultBid?: SortOrderInput | SortOrder
-    bidAmounts?: SortOrder
-    loseSoundUrl?: SortOrderInput | SortOrder
-    movesPerRound?: SortOrder
-    multDiamond?: SortOrder
-    multGold?: SortOrder
-    multOil?: SortOrder
     oilImageUrl?: SortOrderInput | SortOrder
-    probDiamond?: SortOrder
-    probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
-    probRock?: SortOrder
     rockImageUrl?: SortOrderInput | SortOrder
-    winSoundUrl?: SortOrderInput | SortOrder
-    mascotImageUrl?: SortOrderInput | SortOrder
     mascotOnDustImageUrl?: SortOrderInput | SortOrder
     mascotOnRockImageUrl?: SortOrderInput | SortOrder
     mascotOnOilImageUrl?: SortOrderInput | SortOrder
     mascotOnGoldImageUrl?: SortOrderInput | SortOrder
     mascotOnDiamondImageUrl?: SortOrderInput | SortOrder
+    probDust?: SortOrder
+    probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
+    multDiamond?: SortOrder
+    multGold?: SortOrder
+    multOil?: SortOrder
+    wheelSegments?: SortOrderInput | SortOrder
+    wheelSpeed?: SortOrderInput | SortOrder
+    wheelDuration?: SortOrderInput | SortOrder
+    slotReels?: SortOrderInput | SortOrder
+    slotSymbols?: SortOrderInput | SortOrder
+    slotPaylines?: SortOrderInput | SortOrder
+    autoSpin?: SortOrder
     Partner?: PartnerOrderByWithRelationInput
     GameSession?: GameSessionOrderByRelationAggregateInput
   }
@@ -10024,34 +10343,51 @@ export namespace Prisma {
     OR?: GameConfigWhereInput[]
     NOT?: GameConfigWhereInput | GameConfigWhereInput[]
     name?: StringFilter<"GameConfig"> | string
+    gameType?: EnumGameTypeFilter<"GameConfig"> | $Enums.GameType
     partnerId?: StringNullableFilter<"GameConfig"> | string | null
     createdAt?: DateTimeFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeFilter<"GameConfig"> | Date | string
     backgroundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    defaultBet?: IntNullableFilter<"GameConfig"> | number | null
+    betAmounts?: IntNullableListFilter<"GameConfig">
+    spinsPerSession?: IntFilter<"GameConfig"> | number
+    wallet?: IntFilter<"GameConfig"> | number
+    winSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    loseSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotOnWinImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotOnLoseImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    dustPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    rockPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    oilPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    goldPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    diamondPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    movesPerRound?: IntFilter<"GameConfig"> | number
     diamondImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     dustImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     goldImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    defaultBid?: IntNullableFilter<"GameConfig"> | number | null
-    bidAmounts?: IntNullableListFilter<"GameConfig">
-    loseSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
-    movesPerRound?: IntFilter<"GameConfig"> | number
-    multDiamond?: FloatFilter<"GameConfig"> | number
-    multGold?: FloatFilter<"GameConfig"> | number
-    multOil?: FloatFilter<"GameConfig"> | number
     oilImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    probDiamond?: IntFilter<"GameConfig"> | number
-    probDust?: IntFilter<"GameConfig"> | number
-    probGold?: IntFilter<"GameConfig"> | number
-    probOil?: IntFilter<"GameConfig"> | number
-    probRock?: IntFilter<"GameConfig"> | number
     rockImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    winSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
-    mascotImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnDustImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnRockImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnOilImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnGoldImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnDiamondImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    probDust?: IntFilter<"GameConfig"> | number
+    probRock?: IntFilter<"GameConfig"> | number
+    probOil?: IntFilter<"GameConfig"> | number
+    probGold?: IntFilter<"GameConfig"> | number
+    probDiamond?: IntFilter<"GameConfig"> | number
+    multDiamond?: FloatFilter<"GameConfig"> | number
+    multGold?: FloatFilter<"GameConfig"> | number
+    multOil?: FloatFilter<"GameConfig"> | number
+    wheelSegments?: JsonNullableFilter<"GameConfig">
+    wheelSpeed?: FloatNullableFilter<"GameConfig"> | number | null
+    wheelDuration?: IntNullableFilter<"GameConfig"> | number | null
+    slotReels?: JsonNullableFilter<"GameConfig">
+    slotSymbols?: JsonNullableFilter<"GameConfig">
+    slotPaylines?: JsonNullableFilter<"GameConfig">
+    autoSpin?: BoolFilter<"GameConfig"> | boolean
     Partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
     GameSession?: GameSessionListRelationFilter
   }, "id" | "partnerId_name">
@@ -10059,34 +10395,51 @@ export namespace Prisma {
   export type GameConfigOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     backgroundUrl?: SortOrderInput | SortOrder
+    defaultBet?: SortOrderInput | SortOrder
+    betAmounts?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    winSoundUrl?: SortOrderInput | SortOrder
+    loseSoundUrl?: SortOrderInput | SortOrder
+    mascotImageUrl?: SortOrderInput | SortOrder
+    mascotOnWinImageUrl?: SortOrderInput | SortOrder
+    mascotOnLoseImageUrl?: SortOrderInput | SortOrder
+    dustPrizeImageUrl?: SortOrderInput | SortOrder
+    rockPrizeImageUrl?: SortOrderInput | SortOrder
+    oilPrizeImageUrl?: SortOrderInput | SortOrder
+    goldPrizeImageUrl?: SortOrderInput | SortOrder
+    diamondPrizeImageUrl?: SortOrderInput | SortOrder
+    movesPerRound?: SortOrder
     diamondImageUrl?: SortOrderInput | SortOrder
     dustImageUrl?: SortOrderInput | SortOrder
     goldImageUrl?: SortOrderInput | SortOrder
-    defaultBid?: SortOrderInput | SortOrder
-    bidAmounts?: SortOrder
-    loseSoundUrl?: SortOrderInput | SortOrder
-    movesPerRound?: SortOrder
-    multDiamond?: SortOrder
-    multGold?: SortOrder
-    multOil?: SortOrder
     oilImageUrl?: SortOrderInput | SortOrder
-    probDiamond?: SortOrder
-    probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
-    probRock?: SortOrder
     rockImageUrl?: SortOrderInput | SortOrder
-    winSoundUrl?: SortOrderInput | SortOrder
-    mascotImageUrl?: SortOrderInput | SortOrder
     mascotOnDustImageUrl?: SortOrderInput | SortOrder
     mascotOnRockImageUrl?: SortOrderInput | SortOrder
     mascotOnOilImageUrl?: SortOrderInput | SortOrder
     mascotOnGoldImageUrl?: SortOrderInput | SortOrder
     mascotOnDiamondImageUrl?: SortOrderInput | SortOrder
+    probDust?: SortOrder
+    probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
+    multDiamond?: SortOrder
+    multGold?: SortOrder
+    multOil?: SortOrder
+    wheelSegments?: SortOrderInput | SortOrder
+    wheelSpeed?: SortOrderInput | SortOrder
+    wheelDuration?: SortOrderInput | SortOrder
+    slotReels?: SortOrderInput | SortOrder
+    slotSymbols?: SortOrderInput | SortOrder
+    slotPaylines?: SortOrderInput | SortOrder
+    autoSpin?: SortOrder
     _count?: GameConfigCountOrderByAggregateInput
     _avg?: GameConfigAvgOrderByAggregateInput
     _max?: GameConfigMaxOrderByAggregateInput
@@ -10100,34 +10453,51 @@ export namespace Prisma {
     NOT?: GameConfigScalarWhereWithAggregatesInput | GameConfigScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"GameConfig"> | string
     name?: StringWithAggregatesFilter<"GameConfig"> | string
+    gameType?: EnumGameTypeWithAggregatesFilter<"GameConfig"> | $Enums.GameType
     partnerId?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GameConfig"> | Date | string
     backgroundUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    defaultBet?: IntNullableWithAggregatesFilter<"GameConfig"> | number | null
+    betAmounts?: IntNullableListFilter<"GameConfig">
+    spinsPerSession?: IntWithAggregatesFilter<"GameConfig"> | number
+    wallet?: IntWithAggregatesFilter<"GameConfig"> | number
+    winSoundUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    loseSoundUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    mascotImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    mascotOnWinImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    mascotOnLoseImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    dustPrizeImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    rockPrizeImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    oilPrizeImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    goldPrizeImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    diamondPrizeImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    movesPerRound?: IntWithAggregatesFilter<"GameConfig"> | number
     diamondImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     dustImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     goldImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
-    defaultBid?: IntNullableWithAggregatesFilter<"GameConfig"> | number | null
-    bidAmounts?: IntNullableListFilter<"GameConfig">
-    loseSoundUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
-    movesPerRound?: IntWithAggregatesFilter<"GameConfig"> | number
-    multDiamond?: FloatWithAggregatesFilter<"GameConfig"> | number
-    multGold?: FloatWithAggregatesFilter<"GameConfig"> | number
-    multOil?: FloatWithAggregatesFilter<"GameConfig"> | number
     oilImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
-    probDiamond?: IntWithAggregatesFilter<"GameConfig"> | number
-    probDust?: IntWithAggregatesFilter<"GameConfig"> | number
-    probGold?: IntWithAggregatesFilter<"GameConfig"> | number
-    probOil?: IntWithAggregatesFilter<"GameConfig"> | number
-    probRock?: IntWithAggregatesFilter<"GameConfig"> | number
     rockImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
-    winSoundUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
-    mascotImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     mascotOnDustImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     mascotOnRockImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     mascotOnOilImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     mascotOnGoldImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
     mascotOnDiamondImageUrl?: StringNullableWithAggregatesFilter<"GameConfig"> | string | null
+    probDust?: IntWithAggregatesFilter<"GameConfig"> | number
+    probRock?: IntWithAggregatesFilter<"GameConfig"> | number
+    probOil?: IntWithAggregatesFilter<"GameConfig"> | number
+    probGold?: IntWithAggregatesFilter<"GameConfig"> | number
+    probDiamond?: IntWithAggregatesFilter<"GameConfig"> | number
+    multDiamond?: FloatWithAggregatesFilter<"GameConfig"> | number
+    multGold?: FloatWithAggregatesFilter<"GameConfig"> | number
+    multOil?: FloatWithAggregatesFilter<"GameConfig"> | number
+    wheelSegments?: JsonNullableWithAggregatesFilter<"GameConfig">
+    wheelSpeed?: FloatNullableWithAggregatesFilter<"GameConfig"> | number | null
+    wheelDuration?: IntNullableWithAggregatesFilter<"GameConfig"> | number | null
+    slotReels?: JsonNullableWithAggregatesFilter<"GameConfig">
+    slotSymbols?: JsonNullableWithAggregatesFilter<"GameConfig">
+    slotPaylines?: JsonNullableWithAggregatesFilter<"GameConfig">
+    autoSpin?: BoolWithAggregatesFilter<"GameConfig"> | boolean
   }
 
   export type AdminWhereInput = {
@@ -10487,33 +10857,50 @@ export namespace Prisma {
   export type GameConfigCreateInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
     Partner?: PartnerCreateNestedOneWithoutGameConfigInput
     GameSession?: GameSessionCreateNestedManyWithoutGameConfigInput
   }
@@ -10521,67 +10908,101 @@ export namespace Prisma {
   export type GameConfigUncheckedCreateInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     partnerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
     GameSession?: GameSessionUncheckedCreateNestedManyWithoutGameConfigInput
   }
 
   export type GameConfigUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
     Partner?: PartnerUpdateOneWithoutGameConfigNestedInput
     GameSession?: GameSessionUpdateManyWithoutGameConfigNestedInput
   }
@@ -10589,133 +11010,201 @@ export namespace Prisma {
   export type GameConfigUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
     GameSession?: GameSessionUncheckedUpdateManyWithoutGameConfigNestedInput
   }
 
   export type GameConfigCreateManyInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     partnerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
   }
 
   export type GameConfigUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type GameConfigUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type AdminCreateInput = {
@@ -11064,6 +11553,13 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumGameTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameType | EnumGameTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameTypeFilter<$PrismaModel> | $Enums.GameType
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11119,6 +11615,45 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
 
   export type PartnerNullableScalarRelationFilter = {
     is?: PartnerWhereInput | null
@@ -11148,126 +11683,187 @@ export namespace Prisma {
   export type GameConfigCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     backgroundUrl?: SortOrder
+    defaultBet?: SortOrder
+    betAmounts?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    winSoundUrl?: SortOrder
+    loseSoundUrl?: SortOrder
+    mascotImageUrl?: SortOrder
+    mascotOnWinImageUrl?: SortOrder
+    mascotOnLoseImageUrl?: SortOrder
+    dustPrizeImageUrl?: SortOrder
+    rockPrizeImageUrl?: SortOrder
+    oilPrizeImageUrl?: SortOrder
+    goldPrizeImageUrl?: SortOrder
+    diamondPrizeImageUrl?: SortOrder
+    movesPerRound?: SortOrder
     diamondImageUrl?: SortOrder
     dustImageUrl?: SortOrder
     goldImageUrl?: SortOrder
-    defaultBid?: SortOrder
-    bidAmounts?: SortOrder
-    loseSoundUrl?: SortOrder
-    movesPerRound?: SortOrder
-    multDiamond?: SortOrder
-    multGold?: SortOrder
-    multOil?: SortOrder
     oilImageUrl?: SortOrder
-    probDiamond?: SortOrder
-    probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
-    probRock?: SortOrder
     rockImageUrl?: SortOrder
-    winSoundUrl?: SortOrder
-    mascotImageUrl?: SortOrder
     mascotOnDustImageUrl?: SortOrder
     mascotOnRockImageUrl?: SortOrder
     mascotOnOilImageUrl?: SortOrder
     mascotOnGoldImageUrl?: SortOrder
     mascotOnDiamondImageUrl?: SortOrder
-  }
-
-  export type GameConfigAvgOrderByAggregateInput = {
-    defaultBid?: SortOrder
-    bidAmounts?: SortOrder
-    movesPerRound?: SortOrder
+    probDust?: SortOrder
+    probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
     multDiamond?: SortOrder
     multGold?: SortOrder
     multOil?: SortOrder
-    probDiamond?: SortOrder
+    wheelSegments?: SortOrder
+    wheelSpeed?: SortOrder
+    wheelDuration?: SortOrder
+    slotReels?: SortOrder
+    slotSymbols?: SortOrder
+    slotPaylines?: SortOrder
+    autoSpin?: SortOrder
+  }
+
+  export type GameConfigAvgOrderByAggregateInput = {
+    defaultBet?: SortOrder
+    betAmounts?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    movesPerRound?: SortOrder
     probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
     probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
+    multDiamond?: SortOrder
+    multGold?: SortOrder
+    multOil?: SortOrder
+    wheelSpeed?: SortOrder
+    wheelDuration?: SortOrder
   }
 
   export type GameConfigMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     backgroundUrl?: SortOrder
+    defaultBet?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    winSoundUrl?: SortOrder
+    loseSoundUrl?: SortOrder
+    mascotImageUrl?: SortOrder
+    mascotOnWinImageUrl?: SortOrder
+    mascotOnLoseImageUrl?: SortOrder
+    dustPrizeImageUrl?: SortOrder
+    rockPrizeImageUrl?: SortOrder
+    oilPrizeImageUrl?: SortOrder
+    goldPrizeImageUrl?: SortOrder
+    diamondPrizeImageUrl?: SortOrder
+    movesPerRound?: SortOrder
     diamondImageUrl?: SortOrder
     dustImageUrl?: SortOrder
     goldImageUrl?: SortOrder
-    defaultBid?: SortOrder
-    loseSoundUrl?: SortOrder
-    movesPerRound?: SortOrder
-    multDiamond?: SortOrder
-    multGold?: SortOrder
-    multOil?: SortOrder
     oilImageUrl?: SortOrder
-    probDiamond?: SortOrder
-    probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
-    probRock?: SortOrder
     rockImageUrl?: SortOrder
-    winSoundUrl?: SortOrder
-    mascotImageUrl?: SortOrder
     mascotOnDustImageUrl?: SortOrder
     mascotOnRockImageUrl?: SortOrder
     mascotOnOilImageUrl?: SortOrder
     mascotOnGoldImageUrl?: SortOrder
     mascotOnDiamondImageUrl?: SortOrder
+    probDust?: SortOrder
+    probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
+    multDiamond?: SortOrder
+    multGold?: SortOrder
+    multOil?: SortOrder
+    wheelSpeed?: SortOrder
+    wheelDuration?: SortOrder
+    autoSpin?: SortOrder
   }
 
   export type GameConfigMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    gameType?: SortOrder
     partnerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     backgroundUrl?: SortOrder
+    defaultBet?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    winSoundUrl?: SortOrder
+    loseSoundUrl?: SortOrder
+    mascotImageUrl?: SortOrder
+    mascotOnWinImageUrl?: SortOrder
+    mascotOnLoseImageUrl?: SortOrder
+    dustPrizeImageUrl?: SortOrder
+    rockPrizeImageUrl?: SortOrder
+    oilPrizeImageUrl?: SortOrder
+    goldPrizeImageUrl?: SortOrder
+    diamondPrizeImageUrl?: SortOrder
+    movesPerRound?: SortOrder
     diamondImageUrl?: SortOrder
     dustImageUrl?: SortOrder
     goldImageUrl?: SortOrder
-    defaultBid?: SortOrder
-    loseSoundUrl?: SortOrder
-    movesPerRound?: SortOrder
-    multDiamond?: SortOrder
-    multGold?: SortOrder
-    multOil?: SortOrder
     oilImageUrl?: SortOrder
-    probDiamond?: SortOrder
-    probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
-    probRock?: SortOrder
     rockImageUrl?: SortOrder
-    winSoundUrl?: SortOrder
-    mascotImageUrl?: SortOrder
     mascotOnDustImageUrl?: SortOrder
     mascotOnRockImageUrl?: SortOrder
     mascotOnOilImageUrl?: SortOrder
     mascotOnGoldImageUrl?: SortOrder
     mascotOnDiamondImageUrl?: SortOrder
-  }
-
-  export type GameConfigSumOrderByAggregateInput = {
-    defaultBid?: SortOrder
-    bidAmounts?: SortOrder
-    movesPerRound?: SortOrder
+    probDust?: SortOrder
+    probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
     multDiamond?: SortOrder
     multGold?: SortOrder
     multOil?: SortOrder
-    probDiamond?: SortOrder
+    wheelSpeed?: SortOrder
+    wheelDuration?: SortOrder
+    autoSpin?: SortOrder
+  }
+
+  export type GameConfigSumOrderByAggregateInput = {
+    defaultBet?: SortOrder
+    betAmounts?: SortOrder
+    spinsPerSession?: SortOrder
+    wallet?: SortOrder
+    movesPerRound?: SortOrder
     probDust?: SortOrder
-    probGold?: SortOrder
-    probOil?: SortOrder
     probRock?: SortOrder
+    probOil?: SortOrder
+    probGold?: SortOrder
+    probDiamond?: SortOrder
+    multDiamond?: SortOrder
+    multGold?: SortOrder
+    multOil?: SortOrder
+    wheelSpeed?: SortOrder
+    wheelDuration?: SortOrder
+  }
+
+  export type EnumGameTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameType | EnumGameTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameTypeWithAggregatesFilter<$PrismaModel> | $Enums.GameType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameTypeFilter<$PrismaModel>
+    _max?: NestedEnumGameTypeFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -11334,6 +11930,56 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -11623,7 +12269,7 @@ export namespace Prisma {
     update?: XOR<XOR<GameSessionUpdateToOneWithWhereWithoutGameActionInput, GameSessionUpdateWithoutGameActionInput>, GameSessionUncheckedUpdateWithoutGameActionInput>
   }
 
-  export type GameConfigCreatebidAmountsInput = {
+  export type GameConfigCreatebetAmountsInput = {
     set: number[]
   }
 
@@ -11647,6 +12293,10 @@ export namespace Prisma {
     connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
   }
 
+  export type EnumGameTypeFieldUpdateOperationsInput = {
+    set?: $Enums.GameType
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -11659,7 +12309,7 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type GameConfigUpdatebidAmountsInput = {
+  export type GameConfigUpdatebetAmountsInput = {
     set?: number[]
     push?: number | number[]
   }
@@ -11678,6 +12328,18 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type PartnerUpdateOneWithoutGameConfigNestedInput = {
@@ -11812,6 +12474,13 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumGameTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameType | EnumGameTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameTypeFilter<$PrismaModel> | $Enums.GameType
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11848,6 +12517,32 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumGameTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameType | EnumGameTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameType[] | ListEnumGameTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameTypeWithAggregatesFilter<$PrismaModel> | $Enums.GameType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameTypeFilter<$PrismaModel>
+    _max?: NestedEnumGameTypeFilter<$PrismaModel>
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11881,17 +12576,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -11922,6 +12606,53 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -11978,66 +12709,100 @@ export namespace Prisma {
   export type GameConfigCreateWithoutPartnerInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
     GameSession?: GameSessionCreateNestedManyWithoutGameConfigInput
   }
 
   export type GameConfigUncheckedCreateWithoutPartnerInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
     GameSession?: GameSessionUncheckedCreateNestedManyWithoutGameConfigInput
   }
 
@@ -12101,34 +12866,51 @@ export namespace Prisma {
     NOT?: GameConfigScalarWhereInput | GameConfigScalarWhereInput[]
     id?: StringFilter<"GameConfig"> | string
     name?: StringFilter<"GameConfig"> | string
+    gameType?: EnumGameTypeFilter<"GameConfig"> | $Enums.GameType
     partnerId?: StringNullableFilter<"GameConfig"> | string | null
     createdAt?: DateTimeFilter<"GameConfig"> | Date | string
     updatedAt?: DateTimeFilter<"GameConfig"> | Date | string
     backgroundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    defaultBet?: IntNullableFilter<"GameConfig"> | number | null
+    betAmounts?: IntNullableListFilter<"GameConfig">
+    spinsPerSession?: IntFilter<"GameConfig"> | number
+    wallet?: IntFilter<"GameConfig"> | number
+    winSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    loseSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotOnWinImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    mascotOnLoseImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    dustPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    rockPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    oilPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    goldPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    diamondPrizeImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    movesPerRound?: IntFilter<"GameConfig"> | number
     diamondImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     dustImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     goldImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    defaultBid?: IntNullableFilter<"GameConfig"> | number | null
-    bidAmounts?: IntNullableListFilter<"GameConfig">
-    loseSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
-    movesPerRound?: IntFilter<"GameConfig"> | number
-    multDiamond?: FloatFilter<"GameConfig"> | number
-    multGold?: FloatFilter<"GameConfig"> | number
-    multOil?: FloatFilter<"GameConfig"> | number
     oilImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    probDiamond?: IntFilter<"GameConfig"> | number
-    probDust?: IntFilter<"GameConfig"> | number
-    probGold?: IntFilter<"GameConfig"> | number
-    probOil?: IntFilter<"GameConfig"> | number
-    probRock?: IntFilter<"GameConfig"> | number
     rockImageUrl?: StringNullableFilter<"GameConfig"> | string | null
-    winSoundUrl?: StringNullableFilter<"GameConfig"> | string | null
-    mascotImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnDustImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnRockImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnOilImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnGoldImageUrl?: StringNullableFilter<"GameConfig"> | string | null
     mascotOnDiamondImageUrl?: StringNullableFilter<"GameConfig"> | string | null
+    probDust?: IntFilter<"GameConfig"> | number
+    probRock?: IntFilter<"GameConfig"> | number
+    probOil?: IntFilter<"GameConfig"> | number
+    probGold?: IntFilter<"GameConfig"> | number
+    probDiamond?: IntFilter<"GameConfig"> | number
+    multDiamond?: FloatFilter<"GameConfig"> | number
+    multGold?: FloatFilter<"GameConfig"> | number
+    multOil?: FloatFilter<"GameConfig"> | number
+    wheelSegments?: JsonNullableFilter<"GameConfig">
+    wheelSpeed?: FloatNullableFilter<"GameConfig"> | number | null
+    wheelDuration?: IntNullableFilter<"GameConfig"> | number | null
+    slotReels?: JsonNullableFilter<"GameConfig">
+    slotSymbols?: JsonNullableFilter<"GameConfig">
+    slotPaylines?: JsonNullableFilter<"GameConfig">
+    autoSpin?: BoolFilter<"GameConfig"> | boolean
   }
 
   export type AnalyticsEventCreateWithoutGameSessionInput = {
@@ -12182,67 +12964,101 @@ export namespace Prisma {
   export type GameConfigCreateWithoutGameSessionInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
     Partner?: PartnerCreateNestedOneWithoutGameConfigInput
   }
 
   export type GameConfigUncheckedCreateWithoutGameSessionInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     partnerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
   }
 
   export type GameConfigCreateOrConnectWithoutGameSessionInput = {
@@ -12318,67 +13134,101 @@ export namespace Prisma {
   export type GameConfigUpdateWithoutGameSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
     Partner?: PartnerUpdateOneWithoutGameConfigNestedInput
   }
 
   export type GameConfigUncheckedUpdateWithoutGameSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type GameSessionCreateWithoutAnalyticsEventInput = {
@@ -12647,33 +13497,50 @@ export namespace Prisma {
   export type GameConfigCreateManyPartnerInput = {
     id: string
     name?: string
+    gameType?: $Enums.GameType
     createdAt?: Date | string
     updatedAt?: Date | string
     backgroundUrl?: string | null
+    defaultBet?: number | null
+    betAmounts?: GameConfigCreatebetAmountsInput | number[]
+    spinsPerSession?: number
+    wallet?: number
+    winSoundUrl?: string | null
+    loseSoundUrl?: string | null
+    mascotImageUrl?: string | null
+    mascotOnWinImageUrl?: string | null
+    mascotOnLoseImageUrl?: string | null
+    dustPrizeImageUrl?: string | null
+    rockPrizeImageUrl?: string | null
+    oilPrizeImageUrl?: string | null
+    goldPrizeImageUrl?: string | null
+    diamondPrizeImageUrl?: string | null
+    movesPerRound?: number
     diamondImageUrl?: string | null
     dustImageUrl?: string | null
     goldImageUrl?: string | null
-    defaultBid?: number | null
-    bidAmounts?: GameConfigCreatebidAmountsInput | number[]
-    loseSoundUrl?: string | null
-    movesPerRound?: number
-    multDiamond?: number
-    multGold?: number
-    multOil?: number
     oilImageUrl?: string | null
-    probDiamond?: number
-    probDust?: number
-    probGold?: number
-    probOil?: number
-    probRock?: number
     rockImageUrl?: string | null
-    winSoundUrl?: string | null
-    mascotImageUrl?: string | null
     mascotOnDustImageUrl?: string | null
     mascotOnRockImageUrl?: string | null
     mascotOnOilImageUrl?: string | null
     mascotOnGoldImageUrl?: string | null
     mascotOnDiamondImageUrl?: string | null
+    probDust?: number
+    probRock?: number
+    probOil?: number
+    probGold?: number
+    probDiamond?: number
+    multDiamond?: number
+    multGold?: number
+    multOil?: number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: number | null
+    wheelDuration?: number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: boolean
   }
 
   export type EmbedTokenUpdateWithoutPartnerInput = {
@@ -12703,99 +13570,150 @@ export namespace Prisma {
   export type GameConfigUpdateWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
     GameSession?: GameSessionUpdateManyWithoutGameConfigNestedInput
   }
 
   export type GameConfigUncheckedUpdateWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
     GameSession?: GameSessionUncheckedUpdateManyWithoutGameConfigNestedInput
   }
 
   export type GameConfigUncheckedUpdateManyWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    gameType?: EnumGameTypeFieldUpdateOperationsInput | $Enums.GameType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultBet?: NullableIntFieldUpdateOperationsInput | number | null
+    betAmounts?: GameConfigUpdatebetAmountsInput | number[]
+    spinsPerSession?: IntFieldUpdateOperationsInput | number
+    wallet?: IntFieldUpdateOperationsInput | number
+    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnWinImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mascotOnLoseImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    dustPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rockPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    oilPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    goldPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    diamondPrizeImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    movesPerRound?: IntFieldUpdateOperationsInput | number
     diamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     goldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    defaultBid?: NullableIntFieldUpdateOperationsInput | number | null
-    bidAmounts?: GameConfigUpdatebidAmountsInput | number[]
-    loseSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    movesPerRound?: IntFieldUpdateOperationsInput | number
-    multDiamond?: FloatFieldUpdateOperationsInput | number
-    multGold?: FloatFieldUpdateOperationsInput | number
-    multOil?: FloatFieldUpdateOperationsInput | number
     oilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    probDiamond?: IntFieldUpdateOperationsInput | number
-    probDust?: IntFieldUpdateOperationsInput | number
-    probGold?: IntFieldUpdateOperationsInput | number
-    probOil?: IntFieldUpdateOperationsInput | number
-    probRock?: IntFieldUpdateOperationsInput | number
     rockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    winSoundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    mascotImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDustImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnRockImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnOilImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnGoldImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     mascotOnDiamondImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    probDust?: IntFieldUpdateOperationsInput | number
+    probRock?: IntFieldUpdateOperationsInput | number
+    probOil?: IntFieldUpdateOperationsInput | number
+    probGold?: IntFieldUpdateOperationsInput | number
+    probDiamond?: IntFieldUpdateOperationsInput | number
+    multDiamond?: FloatFieldUpdateOperationsInput | number
+    multGold?: FloatFieldUpdateOperationsInput | number
+    multOil?: FloatFieldUpdateOperationsInput | number
+    wheelSegments?: NullableJsonNullValueInput | InputJsonValue
+    wheelSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    wheelDuration?: NullableIntFieldUpdateOperationsInput | number | null
+    slotReels?: NullableJsonNullValueInput | InputJsonValue
+    slotSymbols?: NullableJsonNullValueInput | InputJsonValue
+    slotPaylines?: NullableJsonNullValueInput | InputJsonValue
+    autoSpin?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type AnalyticsEventCreateManyGameSessionInput = {
