@@ -1,0 +1,158 @@
+PURPOSE
+
+Provide casino owners with a self‑service tool to build, preview, and publish HTML5 slot games without writing code.
+
+SCOPE
+
+In scope: user auth, subscription, game builder UI, asset storage, preview service, player runtime API, reporting, region/language control.
+
+Out of scope: player payments, responsible‑gaming tooling (left to casinos), real‑time chat.
+
+PERSONAS
+
+CASINO OWNER – business user, needs fresh content fast.
+
+CASINO PLAYER – end user, wants smooth play on desktop and mobile.
+
+PLATFORM ADMIN – keeps SLA, stops abuse.
+
+USER STORIES (HAPPY PATH)
+
+Owner registers with email + password.
+
+Owner opens "Create New Game" form.
+
+Owner fills fields and uploads assets.
+
+Owner clicks "Preview". System returns a temporary session and shows game in modal.
+
+Owner clicks "Save Game". System stores data, assets, and returns gameId.
+
+Owner lists games through API and embeds on casino site.
+
+Player opens game iframe, plays, results flow through spin API.
+
+Owner checks revenue stats on dashboard.
+
+FUNCTIONAL REQUIREMENTS
+6.1 AUTHENTICATION AND BILLING
+
+POST /api/auth/register           -> { jwt }
+
+POST /api/auth/login              -> { jwt }
+
+POST /api/billing/subscribe       -> Stripe checkout session
+
+Access to builder blocked if subscription.status != "active".
+
+6.2 GAME BUILDER FRONTEND (NEXT.JS + SHADCN/UI)
+
+Dynamic form fields:
+title, description, coverImageKey, rows (≤10), columns (≤10)
+sounds: { spin, click, win, lose, bgm }
+mascotEnabled (bool) + mascot files: { start, spin, lose, win, idle }
+backgroundImageKey, frameImageKey
+slotItems[≤20]: { name, imageKey, probability(float 0‑1), revenue(float), minimumCount(int), diagonal(bool) }
+availableLanguages[]: { locale, translations{ key: value } }
+availableRegions[]: { country, currency, minBet, maxBet, step }
+blockedRegions[]: [countryCodes]
+buttonStyleId, betAreaStyleId
+
+File inputs call GET /api/s3/presign to receive a presigned upload URL.
+
+6.3 PREVIEW SERVICE
+
+GET /api/game/preview?gameId=X
+returns { sessionId: string, expiresIn: 7200 }
+
+Frontend opens /play/preview?sid=SESSION_ID in modal with view toggles (mobile, desktop).
+
+6.4 GAME RUNTIME API (PRODUCTION)
+POST /api/session
+Body: { token, gameId, user: { username, balance, currency } }
+Returns: { sessionId, iframeUrl }
+
+GET /api/session/:id
+Returns: game config JSON (cached in Redis, TTL 1 h).
+
+POST /api/spin
+Body: { sessionId, bet }
+Server flow:
+1. POST webhook /casino/balanceCheck { playerRef, bet }
+2. If valid, RNG picks items based on probabilities.
+3. Compute winnings.
+4. Respond { view[][], bet, isWin, winAmount, lines[][] }.
+5. Store spin in Postgres; push summary to Redis Stream "spins".
+
+6.5 REPORTING DASHBOARD
+
+URL /dashboard
+
+Filters: date range, country, currency.
+
+Metrics: totalBets, totalWins, netRevenue, RTP, spinsCount.
+
+Aggregation job runs hourly; daily snapshot saved to Postgres.
+
+NON‑FUNCTIONAL REQUIREMENTS
+
+PERFORMANCE: p95 API <150 ms (cached), spin calc <200 ms.
+
+SCALABILITY: support 10 000 concurrent players.
+
+SECURITY: HTTPS only, JWT (exp 1 h), input validation, rate limits, S3 objects public‑read via CloudFront.
+
+COMPLIANCE: GDPR – delete personal data within 30 days of request.
+
+TECH STACK
+FRONTEND: Next.js 15, TypeScript, Tailwind CSS, shadcn/ui, GSAP.
+BACKEND: Node.js 20, Next.js API routes, Prisma 6, PostgreSQL 15 (RDS), Redis 7 (ElastiCache), S3, Stripe.
+UTILS: Moment.js, AWS CDK for infra.
+
+DATA MODEL (MAIN TABLES)
+users(id, email, passwordHash, role, stripeCustomerId, createdAt)
+subscriptions(userId, plan, status, renewAt)
+games(id, userId, title, description, rows, columns, jsonConfig, createdAt)
+game_assets(id, gameId, type, s3Key)
+regions(id, gameId, country, currency, minBet, maxBet, step)
+languages(id, gameId, locale, jsonStrings)
+slot_items(id, gameId, name, imageKey, probability, revenue, minimumCount, diagonalPrize)
+sessions(id, gameId, playerRef, country, balanceStart, createdAt)
+spins(id, sessionId, bet, win, resultJson, createdAt)
+
+END‑TO‑END FLOW SUMMARY (STEP NUMBERS MATCH DIAGRAM COMMENTS)
+REGISTRATION
+1  POST /api/auth/register
+2  POST /api/billing/subscribe (Stripe)
+GAME CREATION
+3  GET  /api/s3/presign  (per asset)
+4  (client uploads asset to S3)
+5  POST /api/games        (payload described in 6.2)
+6  System stores DB rows, writes cache, returns { gameId }
+PREVIEW
+7  GET  /api/game/preview?gameId=ID -> { sessionId }
+8  Frontend iframe /play/preview?sid=ID (temporary session)
+PRODUCTION SESSION
+9  Casino backend POST /api/session (token, gameId, user) -> { sessionId, iframeUrl }
+10 Casino site embeds iframeUrl
+GAMEPLAY
+11 Player click   -> POST /api/spin
+12 Server balanceCheck -> RNG -> response
+REPORTING
+13 Owner GET /api/metrics?gameId=ID&dateFrom=yyyy‑mm‑dd&dateTo=yyyy‑mm‑dd
+
+ANALYTICS AND MONITORING
+
+Real‑time metrics pushed to Redis Streams.
+
+Grafana + Prometheus dashboards; alerts via PagerDuty.
+
+RISKS AND MITIGATIONS
+
+Asset abuse  | limit file size, virus scan.
+
+RNG dispute | provably fair seed, external audit.
+
+Latency      | Redis cache, Lua scripts.
+
+Legal change | maintain country blocklist.

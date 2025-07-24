@@ -1,6 +1,8 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -8,141 +10,255 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum GameType {
-  HEXAGON_MINING
-  CASINO_WHEEL
-  SLOT_MACHINE
+// Users and Authentication
+model User {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String   @unique @db.VarChar(255)
+  passwordHash     String   @map("password_hash") @db.VarChar(255)
+  role             String   @default("owner") @db.VarChar(50)
+  stripeCustomerId String?  @map("stripe_customer_id") @db.VarChar(255)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  subscriptions Subscription[]
+  games         Game[]
+
+  @@map("users")
 }
 
-model Partner {
-  id         String       @id @default(cuid())
-  name       String       @unique
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  EmbedToken EmbedToken[]
-  GameConfig GameConfig[]
+// Subscription Management
+model Subscription {
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId               String    @map("user_id") @db.Uuid
+  plan                 String    @db.VarChar(50)
+  status               String    @db.VarChar(50)
+  stripeSubscriptionId String?   @map("stripe_subscription_id") @db.VarChar(255)
+  renewAt              DateTime? @map("renew_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
 }
 
-model GameSession {
-  id               String           @id @default(cuid())
-  playerIdentifier String
-  gameConfigId     String
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  AnalyticsEvent   AnalyticsEvent[]
-  GameAction       GameAction[]
-  GameConfig       GameConfig       @relation(fields: [gameConfigId], references: [id])
+// Game Configuration
+model Game {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  rows        Int      @db.Integer
+  columns     Int      @db.Integer
+  jsonConfig  Json     @map("json_config") @db.JsonB
+  isPublished Boolean  @default(false) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@index([playerIdentifier])
+  // Relations
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assets         GameAsset[]
+  languages      Language[]
+  regions        Region[]
+  slotItems      SlotItem[]
+  colorTheme     ColorTheme?
+  controlLayout  ControlLayout?
+  sessions       Session[]
+  hourlyMetrics  HourlyMetric[]
+  dailyMetrics   DailyMetric[]
+
+  @@map("games")
 }
 
-model AnalyticsEvent {
-  id            String      @id
-  gameSessionId String
-  eventType     String
-  payload       Json
-  createdAt     DateTime    @default(now())
-  GameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+// Asset Management
+model GameAsset {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId    String   @map("game_id") @db.Uuid
+  type      String   @db.VarChar(50) // 'image', 'audio', 'mascot'
+  s3Key     String   @map("s3_key") @db.VarChar(500)
+  fileSize  Int?     @map("file_size") @db.Integer
+  mimeType  String?  @map("mime_type") @db.VarChar(100)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@map("game_assets")
 }
 
-model EmbedToken {
-  id          String   @id
-  token       String   @unique
-  partnerId   String
-  permissions Json
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Partner     Partner  @relation(fields: [partnerId], references: [id])
+// Localization
+model Language {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId      String   @map("game_id") @db.Uuid
+  locale      String   @db.VarChar(10)
+  jsonStrings Json     @map("json_strings") @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@map("languages")
 }
 
-model GameAction {
-  id            String      @id
-  gameSessionId String
-  actionType    String
-  payload       Json
-  createdAt     DateTime    @default(now())
-  GameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+// Regional Configuration
+model Region {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId    String   @map("game_id") @db.Uuid
+  country   String   @db.VarChar(3)
+  currency  String   @db.VarChar(3)
+  minBet    Decimal  @map("min_bet") @db.Decimal(10, 2)
+  maxBet    Decimal  @map("max_bet") @db.Decimal(10, 2)
+  step      Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@map("regions")
 }
 
-model GameConfig {
-  id              String        @id
-  name            String        @default("default")
-  gameType        GameType      @default(HEXAGON_MINING)
-  partnerId       String?
-  Partner         Partner?      @relation(fields: [partnerId], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  
-  // Common casino settings
-  backgroundUrl   String?
-  defaultBet      Int?          @default(100)
-  betAmounts      Int[]         @default([100, 200, 500])
-  spinsPerSession Int           @default(10)
-  wallet          Int           @default(10000)
-  
-  // Sound assets
-  winSoundUrl     String?
-  loseSoundUrl    String?
-  
-  // Mascot assets
-  mascotImageUrl  String?
-  mascotOnWinImageUrl String?
-  mascotOnLoseImageUrl String?
-  
-  // Prize symbol assets (casino terminology)
-  dustPrizeImageUrl    String?
-  rockPrizeImageUrl    String?
-  oilPrizeImageUrl     String?
-  goldPrizeImageUrl    String?
-  diamondPrizeImageUrl String?
-  
-  // Hexagon mining game specific (legacy support)
-  movesPerRound   Int           @default(10)
-  diamondImageUrl String?
-  dustImageUrl    String?
-  goldImageUrl    String?
-  oilImageUrl     String?
-  rockImageUrl    String?
-  mascotOnDustImageUrl String?
-  mascotOnRockImageUrl String?
-  mascotOnOilImageUrl String?
-  mascotOnGoldImageUrl String?
-  mascotOnDiamondImageUrl String?
-  
-  // Prize probabilities (casino terminology)
-  probDust        Int           @default(50)
-  probRock        Int           @default(30)
-  probOil         Int           @default(15)
-  probGold        Int           @default(4)
-  probDiamond     Int           @default(1)
-  
-  // Prize multipliers (casino terminology)
-  multDiamond     Float         @default(5)
-  multGold        Float         @default(3)
-  multOil         Float         @default(2)
-  
-  // Casino wheel specific settings
-  wheelSegments   Json?         // Array of {label, color, probability, multiplier}
-  wheelSpeed      Float?        @default(3.0)
-  wheelDuration   Int?          @default(4000)
-  
-  // Slot machine specific settings
-  slotReels       Json?         // Array of reel configurations
-  slotSymbols     Json?         // Available symbols with weights
-  slotPaylines    Json?         // Winning combinations
-  autoSpin        Boolean       @default(false)
-  
-  GameSession     GameSession[]
+// Slot Item Configuration
+model SlotItem {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId      String   @map("game_id") @db.Uuid
+  name        String   @db.VarChar(100)
+  imageKey    String   @map("image_key") @db.VarChar(500)
+  probability Decimal  @db.Decimal(5, 4)
+  revenue     Decimal? @db.Decimal(10, 2)
+  minimumCount    Int      @default(1) @map("minimum_count") @db.Integer
+  diagonalPrize   Boolean  @default(false) @map("diagonal_prize")
+  orderIndex  Int      @default(0) @map("order_index") @db.Integer
+  category    String?  @db.VarChar(50)
+  tags        String[] @db.Text
+  isCustom    Boolean  @default(true) @map("is_custom")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@unique([partnerId, name])
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([orderIndex])
+  @@index([category])
+  @@map("slot_items")
 }
 
-model Admin {
-  id                  String    @id @default(cuid())
-  email               String    @unique
-  password            String
-  passwordResetToken  String?   @unique
-  passwordResetExpiry DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+// Runtime Sessions
+model Session {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId       String   @map("game_id") @db.Uuid
+  playerRef    String   @map("player_ref") @db.VarChar(255)
+  country      String?  @db.VarChar(3)
+  balanceStart Decimal? @map("balance_start") @db.Decimal(15, 2)
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  game  Game   @relation(fields: [gameId], references: [id])
+  spins Spin[]
+
+  @@map("sessions")
+}
+
+// Spin History
+model Spin {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId  String   @map("session_id") @db.Uuid
+  bet        Decimal  @db.Decimal(10, 2)
+  win        Decimal  @default(0) @db.Decimal(10, 2)
+  resultJson Json     @map("result_json") @db.JsonB
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  session Session @relation(fields: [sessionId], references: [id])
+
+  @@map("spins")
+}
+
+// Hourly Metrics Aggregation
+model HourlyMetric {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId      String   @map("game_id") @db.Uuid
+  country     String?  @db.VarChar(3)
+  currency    String?  @db.VarChar(3)
+  hour        DateTime @db.Timestamp
+  totalBets   Decimal  @default(0) @map("total_bets") @db.Decimal(15, 2)
+  totalWins   Decimal  @default(0) @map("total_wins") @db.Decimal(15, 2)
+  netRevenue  Decimal  @default(0) @map("net_revenue") @db.Decimal(15, 2)
+  spinCount   Int      @default(0) @map("spin_count") @db.Integer
+  playerCount Int      @default(0) @map("player_count") @db.Integer
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, country, currency, hour])
+  @@index([gameId, hour])
+  @@index([hour])
+  @@map("hourly_metrics")
+}
+
+// Daily Metrics Snapshots
+model DailyMetric {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId      String   @map("game_id") @db.Uuid
+  country     String?  @db.VarChar(3)
+  currency    String?  @db.VarChar(3)
+  date        DateTime @db.Date
+  totalBets   Decimal  @default(0) @map("total_bets") @db.Decimal(15, 2)
+  totalWins   Decimal  @default(0) @map("total_wins") @db.Decimal(15, 2)
+  netRevenue  Decimal  @default(0) @map("net_revenue") @db.Decimal(15, 2)
+  spinCount   Int      @default(0) @map("spin_count") @db.Integer
+  playerCount Int      @default(0) @map("player_count") @db.Integer
+  rtp         Decimal? @db.Decimal(5, 4) // Return to Player percentage
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, country, currency, date])
+  @@index([gameId, date])
+  @@index([date])
+  @@map("daily_metrics")
+}
+// Color Theme Configuration
+model ColorTheme {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId          String   @unique @map("game_id") @db.Uuid
+  primaryColor    String   @map("primary_color") @db.VarChar(7)
+  secondaryColor  String   @map("secondary_color") @db.VarChar(7)
+  accentColor     String?  @map("accent_color") @db.VarChar(7)
+  backgroundColor String?  @map("background_color") @db.VarChar(7)
+  textColor       String?  @map("text_color") @db.VarChar(7)
+  contrastRatio   Decimal? @map("contrast_ratio") @db.Decimal(4, 2)
+  isAccessible    Boolean  @default(false) @map("is_accessible")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@map("color_themes")
+}
+
+// Control Layout Configuration
+model ControlLayout {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gameId       String   @unique @map("game_id") @db.Uuid
+  layoutType   String   @map("layout_type") @db.VarChar(20)
+  buttonStyle  String   @map("button_style") @db.VarChar(20)
+  position     String   @map("position") @db.VarChar(20)
+  autoHide     Boolean  @default(false) @map("auto_hide")
+  customStyles Json?    @map("custom_styles") @db.JsonB
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@map("control_layouts")
 }

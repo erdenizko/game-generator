@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Code Quality Analyzer",
+  "description": "Analyzes modified source code files for potential bugs, errors, and suggests improvements while maintaining existing functionality",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "src/**/*.{ts",
+      "tsx",
+      "js",
+      "jsx}"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "You are a code quality expert. Analyze the following code changes:\n\n1. Look for potential bugs, errors, or edge cases that might not be handled properly\n2. Identify performance issues or inefficient code patterns\n3. Check for security vulnerabilities or best practice violations\n4. Suggest improvements to readability, maintainability, and code organization\n5. Ensure proper error handling and input validation\n6. Verify TypeScript type safety where applicable\n\nProvide specific, actionable suggestions for improvement while maintaining the existing functionality. Format your response with clear sections and code examples where appropriate. Be concise but thorough."
+  }
+}

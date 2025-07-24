@@ -45,8 +45,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
+  --background: lab(97 0 -0.01);
+  --foreground: oklch(0.141 0.005 285.823); 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
@@ -76,6 +76,7 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  --white: oklch(1 0 0);
 }
 
 .dark {
@@ -110,6 +111,44 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+  --white: oklch(0 0 0);
+}
+
+.neon-glow {
+  box-shadow: 0 0 8px 2px #39ff14, 0 0 16px 4px #00e0ff, 0 0 32px 8px #ff00de;
+  border: 2px solid #39ff14;
+  color: #fff;
+  background: linear-gradient(90deg, #00e0ff 0%, #ff00de 100%);
+  text-shadow: 0 0 8px #39ff14, 0 0 16px #00e0ff;
+}
+
+@keyframes neon-border {
+  0% {
+    box-shadow: 0 0 8px 2px #39ff14, 0 0 16px 4px #00e0ff, 0 0 32px 8px #ff00de;
+    border-color: #39ff14;
+  }
+  50% {
+    box-shadow: 0 0 16px 4px #ff00de, 0 0 32px 8px #00e0ff, 0 0 64px 16px #39ff14;
+    border-color: #ff00de;
+  }
+  100% {
+    box-shadow: 0 0 8px 2px #39ff14, 0 0 16px 4px #00e0ff, 0 0 32px 8px #ff00de;
+    border-color: #39ff14;
+  }
+}
+
+.animate-neon {
+  animation: neon-border 1.5s infinite alternate;
+}
+
+.spiral-gradient-bg {
+  background: conic-gradient(from 0deg at 50% 50%, #ff66cc, #66ccff, #99ff66, #ff66cc);
+  background-size: 200% 200%;
+}
+
+@keyframes spiral-pan {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 200%; }
 }
 
 @layer base {
@@ -118,5 +157,28 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 }
