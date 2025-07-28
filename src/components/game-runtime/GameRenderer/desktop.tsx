@@ -3,10 +3,10 @@
 import { GameConfig, SpinResult } from '@/lib/types';
 import { useGameLogic, GameRendererBaseProps } from './base';
 import { ColorThemeProvider } from '@/components/game-builder/color-theme-provider';
-import { Music, Volume2, VolumeX, Info, Settings, Minus, Plus, Play, RotateCcw } from 'lucide-react';
+import { Music, Settings, Minus, Plus, Play, RotateCcw } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { cn, getButtonStyle } from '@/lib/utils';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 
 interface DesktopGameRendererProps extends GameRendererBaseProps {
@@ -15,7 +15,6 @@ interface DesktopGameRendererProps extends GameRendererBaseProps {
 
 export default function DesktopGameRenderer({
     gameConfig,
-    sessionId,
     onSpin,
     onBalanceUpdate,
     initialBalance,
@@ -29,16 +28,11 @@ export default function DesktopGameRenderer({
         lastWin,
         gameMatrix,
         winningLines,
-        soundEnabled,
         musicEnabled,
         isAutoSpin,
         regionSettings,
-        setSoundEnabled,
         setMusicEnabled,
         setIsAutoSpin,
-        handleSpin,
-        handleBetChange,
-        handleMaxBet,
         adjustBet,
         getEnhancedSlotItem,
         formatCurrency,
@@ -55,83 +49,145 @@ export default function DesktopGameRenderer({
         initialBalance,
     });
 
-    // 3D cylinder spinning state
+    // Enhanced 3D cylinder spinning state
     const [reelStates, setReelStates] = useState<Array<{
         rotation: number;
         symbols: string[];
         isSpinning: boolean;
+        velocity: number;
     }>>([]);
 
-    // Initialize reel states
+    // Calculate optimal dimensions for crisp rendering
+    const SYMBOLS_PER_REEL = 12; // Reduced for better performance
+    const CYLINDER_RADIUS = 120; // Fixed radius for consistent perspective
+    const SYMBOL_ANGLE = 360 / SYMBOLS_PER_REEL;
+
+    // Initialize reel states with better symbol distribution
     useEffect(() => {
-        const initialStates = Array.from({ length: gameConfig.columns }, (_, colIndex) => ({
-            rotation: 0,
-            symbols: Array.from({ length: gameConfig.rows }, (_, rowIndex) =>
-                gameMatrix[rowIndex]?.[colIndex] || gameConfig.slotItems[0]?.id || 'default'
-            ),
-            isSpinning: false
-        }));
+        const initialStates = Array.from({ length: gameConfig.columns }, (_, colIndex) => {
+            // Create a pool of symbols with proper distribution
+            const symbolPool = [...gameConfig.slotItems];
+            const extendedPool: typeof symbolPool = [];
+            
+            // Ensure we have enough symbols by repeating the pool
+            while (extendedPool.length < SYMBOLS_PER_REEL) {
+                extendedPool.push(...symbolPool);
+            }
+            
+            // Take random symbols from the pool
+            const symbols = Array.from({ length: SYMBOLS_PER_REEL }, (_, index) => {
+                if (index < gameConfig.rows) {
+                    return gameMatrix[index]?.[colIndex] || symbolPool[0]?.id || 'default';
+                }
+                return extendedPool[index % extendedPool.length]?.id || 'default';
+            });
+
+            return {
+                rotation: 0,
+                symbols,
+                isSpinning: false,
+                velocity: 0
+            };
+        });
         setReelStates(initialStates);
     }, [gameConfig.columns, gameConfig.rows, gameConfig.slotItems, gameMatrix]);
 
-    // 3D cylinder spinning animation
-    const animateReelSpin3D = useCallback((reelIndex: number, finalSymbols: string[], duration: number = 2) => {
+    // Enhanced 3D cylinder spinning animation with elastic bounce
+    const animateReelSpin3D = useCallback((reelIndex: number, finalSymbols: string[]) => {
         const reel = reelsRef.current[reelIndex];
         if (!reel) return Promise.resolve();
-
-        const symbolHeight = reel.offsetHeight / gameConfig.rows;
-        const radius = (symbolHeight * gameConfig.rows) / (2 * Math.PI); // Calculate cylinder radius
-        const symbolAngle = 360 / gameConfig.rows; // Angle per symbol
 
         return new Promise<void>((resolve) => {
             // Update reel state to spinning
             setReelStates(prev => prev.map((state, index) =>
-                index === reelIndex ? { ...state, isSpinning: true } : state
+                index === reelIndex ? { ...state, isSpinning: true, velocity: 1 } : state
             ));
 
-            const tl = gsap.timeline({ onComplete: resolve });
+            // Create main timeline
+            const tl = gsap.timeline({ 
+                onComplete: () => {
+                    // Final state update
+                    setReelStates(prev => prev.map((state, index) =>
+                        index === reelIndex ? { 
+                            ...state, 
+                            isSpinning: false, 
+                            velocity: 0,
+                            symbols: finalSymbols,
+                            rotation: 0
+                        } : state
+                    ));
+                    resolve();
+                }
+            });
 
-            // Phase 1: Spin up (slow to fast)
+            // Calculate final position to land on correct symbols
+            const totalSpins = 3 + (reelIndex * 0.3); // Staggered stopping
+            const finalRotation = totalSpins * 360;
+            
+            // Phase 1: Accelerate (0.3s)
             tl.to(reel, {
-                rotationX: `+=${360 * 5}`, // 5 full rotations
-                duration: duration * 0.6,
-                ease: 'power2.in',
+                rotationX: finalRotation * 0.2,
+                duration: 0.3,
+                ease: 'power2.out',
+                onUpdate: function () {
+                    const currentRotation = this.targets()[0]._gsap.rotationX || 0;
+                    const velocity = Math.abs(this.progress() - (this.prevProgress || 0));
+                    setReelStates(prev => prev.map((state, index) =>
+                        index === reelIndex ? { 
+                            ...state, 
+                            rotation: currentRotation,
+                            velocity: velocity * 10
+                        } : state
+                    ));
+                    this.prevProgress = this.progress();
+                }
+            });
+
+            // Phase 2: Constant speed (0.6s)
+            tl.to(reel, {
+                rotationX: finalRotation * 0.8,
+                duration: 0.6,
+                ease: 'none',
                 onUpdate: function () {
                     const currentRotation = this.targets()[0]._gsap.rotationX || 0;
                     setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { ...state, rotation: currentRotation } : state
+                        index === reelIndex ? { 
+                            ...state, 
+                            rotation: currentRotation,
+                            velocity: 1
+                        } : state
                     ));
                 },
-                onComplete: () => {
-                    // Update symbols to final state
+                onStart: () => {
+                    // Update symbols during constant speed phase for smooth transition
                     setReelStates(prev => prev.map((state, index) =>
                         index === reelIndex ? { ...state, symbols: finalSymbols } : state
                     ));
                 }
             });
 
-            // Phase 2: Slow down and land
+            // Phase 3: Elastic deceleration with bounce (0.9s)
             tl.to(reel, {
-                rotationX: `+=${360 * 2}`, // 2 more rotations
-                duration: duration * 0.4,
-                ease: 'bounce.out',
+                rotationX: finalRotation,
+                duration: 0.9,
+                ease: 'elastic.out(1, 0.6)', // Strong elastic bounce
                 onUpdate: function () {
                     const currentRotation = this.targets()[0]._gsap.rotationX || 0;
+                    const velocity = Math.abs(this.progress() - (this.prevProgress || 0));
                     setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { ...state, rotation: currentRotation } : state
+                        index === reelIndex ? { 
+                            ...state, 
+                            rotation: currentRotation,
+                            velocity: velocity * 5
+                        } : state
                     ));
-                },
-                onComplete: () => {
-                    // Stop spinning
-                    setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { ...state, isSpinning: false } : state
-                    ));
+                    this.prevProgress = this.progress();
                 }
             });
         });
-    }, [gameConfig.rows, reelsRef]);
+    }, [reelsRef]);
 
-    // Override the spin animation to use 3D
+    // Enhanced spin handler
     const handleSpin3D = useCallback(async () => {
         if (isSpinning || currentBet > balance) return;
 
@@ -147,14 +203,29 @@ export default function DesktopGameRenderer({
                 throw new Error('No spin handler provided');
             }
 
-            const spinPromises = [];
+            // Create staggered animations for each reel
+            const spinPromises: Promise<void>[] = [];
             for (let col = 0; col < gameConfig.columns; col++) {
                 const columnSymbols = spinResult.view.map((row: string[]) => row[col]);
-                spinPromises.push(animateReelSpin3D(col, columnSymbols, 2 + col * 0.2));
+                
+                // Extend column symbols to fill the cylinder
+                const extendedSymbols = [...columnSymbols];
+                while (extendedSymbols.length < SYMBOLS_PER_REEL) {
+                    extendedSymbols.push(...gameConfig.slotItems.map(item => item.id));
+                }
+                
+                const finalSymbols = extendedSymbols.slice(0, SYMBOLS_PER_REEL);
+                const delay = col * 0.1; // Stagger start times
+                
+                setTimeout(() => {
+                    spinPromises.push(animateReelSpin3D(col, finalSymbols));
+                }, delay * 1000);
             }
 
+            // Wait for all reels to finish
             await Promise.all(spinPromises);
 
+            // Update game state
             setGameMatrix(spinResult.view);
             setBalance(spinResult.balance);
             setLastWin(spinResult.winAmount);
@@ -168,7 +239,7 @@ export default function DesktopGameRenderer({
         } finally {
             setIsSpinning(false);
         }
-    }, [isSpinning, currentBet, balance, onSpin, onBalanceUpdate, gameConfig.columns, animateReelSpin3D, setGameMatrix, setBalance, setLastWin, setWinningLines, setIsSpinning]);
+    }, [isSpinning, currentBet, balance, onSpin, onBalanceUpdate, gameConfig.columns, gameConfig.slotItems, animateReelSpin3D, setGameMatrix, setBalance, setLastWin, setWinningLines, setIsSpinning]);
 
     return (
         <ColorThemeProvider theme={colorTheme}>
@@ -213,56 +284,93 @@ export default function DesktopGameRenderer({
                                 backgroundPosition: 'center'
                             }}
                         >
-                            <div className="reels-grid h-full rounded-lg overflow-hidden bg-white flex flex-row perspective-1000">
+                            {/* Enhanced Reels Grid with better 3D perspective */}
+                            <div className="reels-grid h-full rounded-lg overflow-hidden bg-white flex flex-row"
+                                style={{
+                                    perspective: '2000px', // Increased perspective for less distortion
+                                    perspectiveOrigin: '50% 50%'
+                                }}
+                            >
                                 {Array.from({ length: gameConfig.columns }).map((_, colIndex) => {
                                     const reelState = reelStates[colIndex];
-                                    const symbolHeight = 100 / gameConfig.rows;
-                                    const radius = (100 * gameConfig.rows) / (2 * Math.PI); // Calculate cylinder radius
-                                    const symbolAngle = 360 / gameConfig.rows; // Angle per symbol
 
                                     return (
                                         <div
                                             key={colIndex}
-                                            ref={el => { if (el) reelsRef.current[colIndex] = el; }}
-                                            className="reel h-full flex flex-col relative"
+                                            className="reel-container h-full relative"
                                             style={{
                                                 width: `${100 / gameConfig.columns}%`,
-                                                transformStyle: 'preserve-3d',
-                                                transform: `rotateX(${reelState?.rotation || 0}deg)`,
-                                                transformOrigin: `50% 50% -${symbolHeight * 4}px`
                                             }}
                                         >
-                                            {Array.from({ length: 20 }).map((_, rowIndex) => {
-                                                const symbolId = reelState?.symbols?.[rowIndex] || gameMatrix[rowIndex]?.[colIndex] || gameConfig.slotItems[0]?.id;
-                                                const isWinning = winningLines.some(line =>
-                                                    line.some(pos => Math.floor(pos / gameConfig.columns) === rowIndex && pos % gameConfig.columns === colIndex)
-                                                );
-                                                const slotItem = getEnhancedSlotItem(symbolId);
-                                                const angle = rowIndex * symbolAngle;
+                                            <div
+                                                ref={el => { if (el) reelsRef.current[colIndex] = el; }}
+                                                className="reel h-full relative"
+                                                style={{
+                                                    transformStyle: 'preserve-3d',
+                                                    transform: `rotateX(${reelState?.rotation || 0}deg)`,
+                                                    transformOrigin: `50% 50% 0px`,
+                                                    // Enhanced rendering for crisp visuals
+                                                    backfaceVisibility: 'hidden',
+                                                    willChange: 'transform',
+                                                    filter: reelState?.isSpinning ? 
+                                                        `blur(${Math.min(reelState.velocity * 2, 4)}px)` : 'none',
+                                                    transition: reelState?.isSpinning ? 'none' : 'filter 0.3s ease-out'
+                                                }}
+                                            >
+                                                {/* Enhanced Symbol Rendering */}
+                                                {Array.from({ length: SYMBOLS_PER_REEL }).map((_, symbolIndex) => {
+                                                    const symbolId = reelState?.symbols?.[symbolIndex] || 
+                                                                   gameMatrix[symbolIndex % gameConfig.rows]?.[colIndex] || 
+                                                                   gameConfig.slotItems[0]?.id;
+                                                    
+                                                    const isVisible = symbolIndex < gameConfig.rows;
+                                                    const isWinning = isVisible && winningLines.some(line =>
+                                                        line.some(pos => 
+                                                            Math.floor(pos / gameConfig.columns) === symbolIndex && 
+                                                            pos % gameConfig.columns === colIndex
+                                                        )
+                                                    );
+                                                    
+                                                    const slotItem = getEnhancedSlotItem(symbolId);
+                                                    const angle = symbolIndex * SYMBOL_ANGLE;
 
-                                                return (
-                                                    <div
-                                                        key={`${colIndex}-${rowIndex}`}
-                                                        className={`symbol absolute bg-white flex items-center justify-center overflow-hidden transition-all duration-300 ${isWinning ? 'ring-4 ring-yellow-400 shadow-lg shadow-yellow-400/50' : ''}`}
-                                                        style={{
-                                                            height: `${symbolHeight}%`,
-                                                            transform: `rotateX(${angle}deg) translateZ(${radius}px)`,
-                                                            transformOrigin: '50% 50%',
-                                                            backfaceVisibility: 'hidden'
-                                                        }}
-                                                    >
-                                                        <img
-                                                            src={slotItem?.imageKey || '/placeholder-symbol.svg'}
-                                                            alt={slotItem?.name || 'Unknown'}
-                                                            className="w-full h-full object-cover"
-                                                            loading="lazy"
-                                                        />
-                                                        {isWinning && (
-                                                            <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse" />
-                                                        )}
-                                                    </div>
-                                                );
-                                            })}
+                                                    return (
+                                                        <div
+                                                            key={`${colIndex}-${symbolIndex}`}
+                                                            className={cn(
+                                                                "symbol absolute w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-200",
+                                                                "transition-all duration-300",
+                                                                isWinning && "ring-4 ring-yellow-400 shadow-lg shadow-yellow-400/50 z-10"
+                                                            )}
+                                                            style={{
+                                                                height: `${100 / gameConfig.rows}%`,
+                                                                transform: `rotateX(${angle}deg) translateZ(${CYLINDER_RADIUS}px)`,
+                                                                transformOrigin: '50% 50%',
+                                                                backfaceVisibility: 'hidden',
+                                                                // Enhanced visual quality
+                                                                imageRendering: 'crisp-edges',
+                                                                WebkitFontSmoothing: 'antialiased',
+                                                                opacity: isVisible ? 1 : 0.7
+                                                            }}
+                                                        >
+                                                            <img
+                                                                src={slotItem?.imageKey || '/placeholder-symbol.svg'}
+                                                                alt={slotItem?.name || 'Unknown'}
+                                                                className="w-full h-full object-contain p-1"
+                                                                loading="lazy"
+                                                                style={{
+                                                                    imageRendering: 'crisp-edges',
+                                                                    maxWidth: '90%',
+                                                                    maxHeight: '90%'
+                                                                }}
+                                                            />
+                                                            {isWinning && (
+                                                                <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse" />
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     );
                                 })}
