@@ -28,6 +28,7 @@ import { Language, Region } from '@/lib/types';
 import SlotGameEngine from '@/components/game-runtime/slot-game-engine';
 import { GameConfig, SpinResult } from '@/lib/types';
 import { Select, SelectContent, SelectValue, SelectTrigger, SelectItem } from '@/components/ui/select';
+import { CreateWithAIDialog, VisualAssetType } from './create-with-ai-dialog';
 // Constants for Localization & Regions
 const ALL_LOCALES = [
   { code: 'en', name: 'English' },
@@ -331,7 +332,21 @@ export function SimpleGameForm({
 
                 {/* Visual Assets */}
                 <div className={cn("space-y-6", selectedView === 'visual' ? 'block' : 'hidden')}>
-                  <h3 className='text-lg font-bold'>Visual Assets</h3>
+                  <div className='flex items-center justify-between'>
+                    <h3 className='text-lg font-bold'>Visual Assets</h3>
+                    <CreateWithAIDialog
+                      gameId={formData.id}
+                      onAssetGenerated={(type: VisualAssetType, key: string) => {
+                        if (type === 'cover') {
+                          updateFormData({ coverImageKey: key });
+                        } else if (type === 'background') {
+                          updateFormData({ backgroundImageKey: key });
+                        } else if (type === 'frame') {
+                          updateFormData({ frameImageKey: key });
+                        }
+                      }}
+                    />
+                  </div>
                   <FormField
                     label="Cover Image"
                     helpText="Eye-catching cover image (JPG, PNG, WebP - max 5MB)"
