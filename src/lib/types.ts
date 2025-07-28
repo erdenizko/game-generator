@@ -16,6 +16,13 @@ export interface GameConfig {
   blockedRegions: string[];
   styling: GameStyling;
   isPublished?: boolean;
+  
+  // Marketplace fields
+  isAvailableForSale?: boolean;
+  marketplacePrice?: number;
+  marketplaceDescription?: string;
+  isFeatured?: boolean;
+  
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -442,4 +449,38 @@ export interface ResponsivenessIssue {
   breakpoint: 'mobile' | 'tablet' | 'desktop';
   issue: string;
   recommendation: string;
+}
+
+// Marketplace types
+export interface MarketplaceGame extends GameConfig {
+  ownerId: string;
+  ownerEmail: string;
+  purchaseCount: number;
+}
+
+export interface GamePurchase {
+  id: string;
+  buyerId: string;
+  gameId: string;
+  purchasePrice: number;
+  stripePaymentId?: string;
+  status: 'completed' | 'refunded' | 'cancelled';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MarketplaceSettings {
+  gameId: string;
+  isAvailableForSale: boolean;
+  price?: number;
+  description?: string;
+  isFeatured: boolean;
+}
+
+export interface UpdateMarketplaceSettingsRequest {
+  gameId: string;
+  isAvailableForSale: boolean;
+  marketplacePrice?: number;
+  marketplaceDescription?: string;
+  isFeatured?: boolean;
 }

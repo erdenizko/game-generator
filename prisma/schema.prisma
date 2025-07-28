@@ -23,6 +23,7 @@ model User {
   // Relations
   subscriptions Subscription[]
   games         Game[]
+  purchases     GamePurchase[]
 
   @@map("users")
 }
@@ -53,6 +54,13 @@ model Game {
   columns     Int      @db.Integer
   jsonConfig  Json     @map("json_config") @db.JsonB
   isPublished Boolean  @default(false) @map("is_published")
+  
+  // Marketplace fields
+  isAvailableForSale Boolean @default(false) @map("is_available_for_sale")
+  marketplacePrice   Decimal? @map("marketplace_price") @db.Decimal(10, 2)
+  marketplaceDescription String? @map("marketplace_description") @db.Text
+  isFeatured         Boolean @default(false) @map("is_featured")
+  
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -67,6 +75,7 @@ model Game {
   sessions       Session[]
   hourlyMetrics  HourlyMetric[]
   dailyMetrics   DailyMetric[]
+  purchases      GamePurchase[]  @relation("PurchasedGame")
 
   @@map("games")
 }
@@ -261,4 +270,25 @@ model ControlLayout {
 
   @@index([gameId])
   @@map("control_layouts")
+}
+
+// Game Marketplace Purchases
+model GamePurchase {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  buyerId          String   @map("buyer_id") @db.Uuid
+  gameId           String   @map("game_id") @db.Uuid
+  purchasePrice    Decimal  @map("purchase_price") @db.Decimal(10, 2)
+  stripePaymentId  String?  @map("stripe_payment_id") @db.VarChar(255)
+  status           String   @default("completed") @db.VarChar(50) // completed, refunded, cancelled
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  buyer User @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  game  Game @relation("PurchasedGame", fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([buyerId, gameId])
+  @@index([buyerId])
+  @@index([gameId])
+  @@map("game_purchases")
 }
