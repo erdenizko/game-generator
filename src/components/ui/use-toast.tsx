@@ -1,11 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { ToastProps, ToastActionElement } from "@radix-ui/react-toast"
+import { ToastProps } from "@radix-ui/react-toast"
 import {
   Toast,
   ToastProvider,
   ToastViewport,
+  type ToastActionElement,
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
@@ -34,21 +35,21 @@ function genId() {
 
 type Action =
   | {
-      type: typeof actionTypes.ADD_TOAST
-      toast: ToasterToast
-    }
+    type: typeof actionTypes.ADD_TOAST
+    toast: ToasterToast
+  }
   | {
-      type: typeof actionTypes.UPDATE_TOAST
-      toast: Partial<ToasterToast>
-    }
+    type: typeof actionTypes.UPDATE_TOAST
+    toast: Partial<ToasterToast>
+  }
   | {
-      type: typeof actionTypes.DISMISS_TOAST
-      toastId?: ToasterToast["id"]
-    }
+    type: typeof actionTypes.DISMISS_TOAST
+    toastId?: ToasterToast["id"]
+  }
   | {
-      type: typeof actionTypes.REMOVE_TOAST
-      toastId?: ToasterToast["id"]
-    }
+    type: typeof actionTypes.REMOVE_TOAST
+    toastId?: ToasterToast["id"]
+  }
 
 interface State {
   toasts: ToasterToast[]

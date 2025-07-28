@@ -5,16 +5,16 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-bold tracking-tight transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-bold tracking-tight transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         default:
-          "bg-white text-black hover:bg-gray-100 focus-visible:ring-gray-400 shadow-sm hover:shadow-md",
+          "bg-gradient-to-br from-pink-500 to-orange-500 text-slate-50 border-2 border-transparent [&>*]:text-slate-50 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 focus-visible:ring-gray-400 shadow-sm hover:shadow-md",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "border-2 border-destructive bg-transparent text-destructive shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border border-gray-600 text-gray-300 hover:bg-gray-800/50 hover:border-gray-500 focus-visible:ring-gray-600",
+          "bg-transparent text-slate-500 border-2 border-slate-500 [&>*]:text-slate-500 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 focus-visible:ring-gray-400 shadow-sm hover:shadow-md",
         secondary:
           "bg-gray-900 text-white hover:bg-gray-800 focus-visible:ring-gray-600 border border-gray-700",
         ghost:

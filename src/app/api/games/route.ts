@@ -20,7 +20,7 @@ async function handleCreateGame(request: AuthenticatedRequest) {
       {
         success: true,
         data: {
-          gameId: result.gameId,
+          id: result.gameId,
           message: 'Game created successfully',
         },
         timestamp: new Date().toISOString(),

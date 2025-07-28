@@ -7,8 +7,8 @@ async function handleRefreshToken(request: NextRequest) {
   try {
     // Extract token from Authorization header
     const authHeader = request.headers.get('authorization');
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+
+    if ((!authHeader || !authHeader.startsWith('Bearer '))) {
       return NextResponse.json(
         {
           success: false,

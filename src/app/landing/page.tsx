@@ -8,7 +8,6 @@ import Link from "next/link";
 import ThreeJSSlotMachine from "@/components/game-runtime/threejs-slot-machine";
 import { ModernButton } from "@/components/ui/modern-button";
 import { ModernCard } from "@/components/ui/modern-card";
-import CircularText from "@/components/ui/CircularText";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -29,10 +28,10 @@ const designSystem = {
     textMuted: "#666666",
   },
   typography: {
-    hero: "text-8xl md:text-9xl font-black uppercase tracking-tighter leading-none",
+    hero: "text-6xl md:text-7xl lg:text-8xl font-bold leading-tight md:leading-[1em] mb-10",
     heading: "text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none",
     subheading: "text-3xl md:text-4xl font-bold uppercase tracking-tight",
-    body: "text-xl md:text-2xl font-medium",
+    body: "text-xl md:text-2xl font-medium text-left",
     caption: "text-lg font-medium",
   },
   spacing: {
@@ -55,25 +54,15 @@ const Navigation = memo(() => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/95 backdrop-blur-xl border-b border-white/20' : 'bg-transparent'}`}>
-      <div className="container mx-auto px-6 md:px-12 py-6">
+      <div className="px-6 md:px-12 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-12">
-            <Link href="/" className="text-4xl font-black text-white uppercase tracking-tighter">
-              SLOT<span className="text-yellow-400">TY</span>
-            </Link>
-            <div className="hidden lg:flex items-center space-x-8">
-              <Link href="#features" className="text-xl font-bold text-white hover:text-yellow-400 transition-colors">FEATURES</Link>
-              <Link href="#how-it-works" className="text-xl font-bold text-white hover:text-yellow-400 transition-colors">HOW IT WORKS</Link>
-              <Link href="#pricing" className="text-xl font-bold text-white hover:text-yellow-400 transition-colors">PRICING</Link>
-            </div>
+            <Image src="/logo-white.svg" alt="Logo" width={941} height={216} className="h-8 w-auto" />
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg font-bold">
-              SIGN IN
-            </Button>
-            <Button size="lg" className="bg-yellow-400 text-black hover:bg-yellow-300 text-lg font-bold">
+            <Link href={"/auth"} className="py-2 px-4 rounded-lg bg-[#FF6352] text-white hover:bg-yellow-300 text-lg font-bold">
               START BUILDING
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -87,63 +76,56 @@ Navigation.displayName = 'Navigation';
 const HeroSection = memo(() => {
   const heroRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
+  const stats = [
+    { value: "10K+", label: "GAMES CREATED", color: "text-yellow-400" },
+    { value: "500K+", label: "ACTIVE PLAYERS", color: "text-purple-400" },
+    { value: "$2M+", label: "REVENUE GENERATED", color: "text-green-400" },
+    { value: "99.9%", label: "UPTIME GUARANTEE", color: "text-blue-400" }
+  ];
 
   useLayoutEffect(() => {
     const context = gsap.context(() => {
       gsap.from(".hero-content", { y: 100, opacity: 0, duration: 1, ease: "power3.out", delay: 0.5 });
-
-      if (heroRef.current && heroContentRef.current) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "10% top",
-            end: "50% top",
-            scrub: 0.2,
-            pin: true,
-            pinSpacing: false,
-          }
-        });
-
-        tl.to(heroContentRef.current, {
-          y: -50,
-          opacity: 0,
-          scale: 0.9,
-          duration: 1,
-          ease: "none",
-        }, 0);
-      }
     });
 
     return () => context.revert();
   }, []);
 
   return (
-    <section ref={heroRef} className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-transparent to-purple-500/10"></div>
+    <section ref={heroRef} className="relative min-h-screen flex items-start justify-center bg-gradient-to-br from-slate-200 via-slate-100 to-slate-50 overflow-hidden">
+      <div className="absolute w-1/2 aspect-square bg-radial from-pink-200 via-transparent to-transparent"></div>
 
-      <div ref={heroContentRef} className="hero-content relative z-10 text-center ">
-        <div className="mb-8">
-          <ThreeJSSlotMachine />
+      <div className="absolute -left-1/6 bottom-1/4 w-full aspect-square bg-radial from-purple-200 via-transparent to-transparent"></div>
+
+
+      <div ref={heroContentRef} className="hero-content relative z-10 text-center mt-32 flex-col flex gap-8">
+
+        <div className="flex flex-col">
+          <h1 className={" font-mono text-8xl text-nowrap mx-auto"}>
+            GAMES LIGHTNING FAST
+          </h1>
+          <p className="text-2xl text-zinc-700 max-w-3xl mx-auto">
+            No code required—just pure revenue potential for your casino.
+          </p>
         </div>
-
-        <h1 className={designSystem.typography.hero + " text-white mb-6"}>
-          BUILD GAMES<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-purple-500">FAST</span>
-        </h1>
-
-        <p className={designSystem.typography.body + " text-gray-300 max-w-4xl mx-auto mb-12"}>
-          Create, customize, and launch profitable HTML5 slot games in minutes.
-          No code required—just pure revenue potential for your casino.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <Button size="lg" className="bg-yellow-400 text-black hover:bg-yellow-300 text-2xl font-black px-12 py-6">
-            START BUILDING NOW
-          </Button>
-          <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 text-2xl font-black px-12 py-6">
-            WATCH DEMO
-          </Button>
-        </div>
+        <ThreeJSSlotMachine />
+        <section className="py-32 relative">
+          <div className="absolute bottom-1/2 -left-1/2 translate-1/2 aspect-square w-full bg-radial from-yellow-400/20 via-transparent to-transparent"></div>
+          <div className={designSystem.spacing.container}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className={`text-6xl lg:text-7xl font-mono ${stat.color} mb-4`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-lg font-bold tracking-wider">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   );
@@ -175,7 +157,7 @@ const FeaturesSection = memo(() => {
   ];
 
   return (
-    <section id="features" className="py-48 bg-gradient-to-b from-black via-gray-900 to-black">
+    <section id="features" className="py-48 bg-gradient-to-b from-transparent via-slate-800 to-slate-900 relative">
       <div className={designSystem.spacing.container}>
         <div className="space-y-32">
           {features.map((feature, index) => (
@@ -214,37 +196,6 @@ const FeaturesSection = memo(() => {
 
 FeaturesSection.displayName = 'FeaturesSection';
 
-// Stats Section
-const StatsSection = memo(() => {
-  const stats = [
-    { value: "10K+", label: "GAMES CREATED", color: "text-yellow-400" },
-    { value: "500K+", label: "ACTIVE PLAYERS", color: "text-purple-400" },
-    { value: "$2M+", label: "REVENUE GENERATED", color: "text-green-400" },
-    { value: "99.9%", label: "UPTIME GUARANTEE", color: "text-blue-400" }
-  ];
-
-  return (
-    <section className="py-32 bg-gradient-to-r from-yellow-400/10 via-transparent to-purple-500/10">
-      <div className={designSystem.spacing.container}>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className={`text-6xl lg:text-7xl font-black ${stat.color} mb-4`}>
-                {stat.value}
-              </div>
-              <div className="text-lg font-bold text-white tracking-wider">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-});
-
-StatsSection.displayName = 'StatsSection';
-
 // How It Works Section
 const HowItWorksSection = memo(() => {
   const steps = [
@@ -266,7 +217,7 @@ const HowItWorksSection = memo(() => {
   ];
 
   return (
-    <section id="how-it-works" className="py-48 bg-gradient-to-b from-black to-gray-900">
+    <section id="how-it-works" className="py-48 bg-gradient-to-b from-slate-900 to-slate-800">
       <div className={designSystem.spacing.container}>
         <div className="text-center mb-24">
           <h2 className={designSystem.typography.heading + " text-white mb-6"}>
@@ -619,11 +570,10 @@ const LandingPage = memo(() => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={containerRef} className="bg-black text-white font-sans overflow-x-hidden">
+    <div ref={containerRef} className="bg-background text-foreground font-sans overflow-x-hidden">
       <Navigation />
       <HeroSection />
       <FeaturesSection />
-      <StatsSection />
       <HowItWorksSection />
       <AdvancedFeaturesSection />
       <PricingSection />

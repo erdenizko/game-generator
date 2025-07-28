@@ -1,30 +1,79 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
+
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { AnalyticsCharts } from '@/components/analytics/analytics-charts';
-import { MetricsCards } from '@/components/analytics/metrics-cards';
+import { RefreshCw, TrendingUp, Trophy, Filter } from 'lucide-react';
+import { DashboardStatsCards } from '@/components/analytics/dashboard-stats-cards';
+import { TopGamesCharts } from '@/components/analytics/top-games-charts';
+import { CountryStatsCharts } from '@/components/analytics/country-stats-charts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-interface GameMetrics {
-  totalBets: number;
-  totalWins: number;
-  netRevenue: number;
+interface DashboardStats {
+  totalRevenue: number;
+  totalPlayers: number;
+  totalSpins: number;
+  totalGames: number;
+  avgRtp: number;
+  avgBet: number;
+  revenueChange24h: number;
+  playersChange24h: number;
+  spinsChange24h: number;
+  topPerformingGame: {
+    id: string;
+    title: string;
+    revenue: number;
+    players: number;
+  } | null;
+  recentActivity: {
+    date: string;
+    revenue: number;
+    players: number;
+    spins: number;
+  }[];
+}
+
+interface TopGame {
+  gameId: string;
+  title: string;
+  totalRevenue: number;
+  totalSpins: number;
+  totalPlayers: number;
   rtp: number;
-  spinCount: number;
+  avgBet: number;
+}
+
+interface TopGamesData {
+  byRevenue: TopGame[];
+  byUsage: TopGame[];
+  byPlayers: TopGame[];
+}
+
+interface CountryStats {
+  country: string;
+  countryName: string;
+  totalRevenue: number;
+  totalSpins: number;
+  totalPlayers: number;
+  avgBet: number;
+  rtp: number;
   playerCount: number;
 }
 
-interface MetricsFilter {
-  gameId?: string;
-  country?: string;
-  currency?: string;
-  startDate?: string;
-  endDate?: string;
+interface CountryStatsData {
+  byRevenue: CountryStats[];
+  byPlayers: CountryStats[];
+  bySpins: CountryStats[];
+  summary: {
+    totalCountries: number;
+    totalRevenue: number;
+    totalPlayers: number;
+    totalSpins: number;
+  };
 }
 
 interface Game {
@@ -34,133 +83,207 @@ interface Game {
 }
 
 export default function AnalyticsPage() {
-  const [metrics, setMetrics] = useState<GameMetrics | null>(null);
-  const [games, setGames] = useState<Game[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [period, setPeriod] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const [selectedGameId, setSelectedGameId] = useState<string>('all');
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Filter state
-  const [filters, setFilters] = useState<MetricsFilter>({
-    startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Last 7 days
-    endDate: new Date().toISOString().split('T')[0],
-  });
+  const [games, setGames] = useState<Game[]>([]);
+
+  // Dashboard data states
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [topGamesData, setTopGamesData] = useState<TopGamesData | null>(null);
+  const [countryStatsData, setCountryStatsData] = useState<CountryStatsData | null>(null);
+
+  const fetchAnalyticsData = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Build query parameters
+      const params = new URLSearchParams();
+      params.append('period', period);
+      if (selectedGameId !== 'all') {
+        params.append('gameId', selectedGameId);
+      }
+
+      // Fetch dashboard stats
+      const statsResponse = await fetch(`/api/metrics/dashboard?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+      });
+
+      if (!statsResponse.ok) {
+        throw new Error('Failed to fetch dashboard stats');
+      }
+
+      const statsData = await statsResponse.json();
+      setDashboardStats(statsData.data);
+
+      // Fetch top games data
+      const topGamesResponse = await fetch(`/api/metrics/top-games?${params.toString()}&limit=10`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+      });
+
+      if (!topGamesResponse.ok) {
+        throw new Error('Failed to fetch top games data');
+      }
+
+      const topGamesData = await topGamesResponse.json();
+      setTopGamesData(topGamesData.data);
+
+      // Fetch country stats data
+      const countryStatsResponse = await fetch(`/api/metrics/country-stats?${params.toString()}&limit=10`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+      });
+
+      if (!countryStatsResponse.ok) {
+        throw new Error('Failed to fetch country stats data');
+      }
+
+      const countryStatsData = await countryStatsResponse.json();
+      setCountryStatsData(countryStatsData.data);
+
+    } catch (err) {
+      console.error('Error fetching analytics data:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [period, selectedGameId]);
 
   // Load user's games on component mount
   useEffect(() => {
     loadGames();
   }, []);
 
-  // Load metrics when filters change
+  // Fetch analytics data when filters change
   useEffect(() => {
-    if (filters.gameId || (!filters.gameId && games.length > 0)) {
-
-      const loadMetrics = async () => {
-        setLoading(true);
-        setError(null);
-    
-        try {
-          const params = new URLSearchParams();
-          
-          if (filters.gameId) params.append('gameId', filters.gameId);
-          if (filters.country) params.append('country', filters.country);
-          if (filters.currency) params.append('currency', filters.currency);
-          if (filters.startDate) params.append('startDate', new Date(filters.startDate).toISOString());
-          if (filters.endDate) params.append('endDate', new Date(filters.endDate).toISOString());
-    
-          const response = await fetch(`/api/metrics?${params.toString()}`, {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-          });
-    
-          if (response.ok) {
-            const data = await response.json();
-            setMetrics(data.data.metrics);
-          } else {
-            const errorData = await response.json();
-            setError(errorData.error?.message || 'Failed to load metrics');
-          }
-        } catch (error) {
-          console.error('Error loading metrics:', error);
-          setError('Failed to load metrics');
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadMetrics();
+    if (games.length > 0) {
+      fetchAnalyticsData();
     }
-  }, [filters, games]);
+  }, [period, selectedGameId, games, fetchAnalyticsData]);
 
   const loadGames = async () => {
     try {
       const response = await fetch('/api/games', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
         },
       });
 
       if (response.ok) {
         const data = await response.json();
         setGames(data.data || []);
-        
-        // Auto-select first game if available
-        if (data.data && data.data.length > 0) {
-          setFilters(prev => ({ ...prev, gameId: data.data[0].id }));
-        }
       }
     } catch (error) {
       console.error('Error loading games:', error);
     }
   };
 
-  const handleFilterChange = (key: keyof MetricsFilter, value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value || undefined,
-    }));
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
 
-  const resetFilters = () => {
-    setFilters({
-      gameId: games.length > 0 ? games[0].id : undefined,
-      startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-    });
+  const formatNumber = (num: number): string => {
+    return new Intl.NumberFormat('en-US').format(num);
   };
 
-  const selectedGame = games.find(game => game.id === filters.gameId);
+  const selectedGame = games.find(game => game.id === selectedGameId);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-lg">Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-lg text-red-600 mb-4">Error: {error}</p>
+          <Button onClick={fetchAnalyticsData} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
-        <p className="text-gray-600">
-          Monitor your game performance and player engagement metrics
-        </p>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
+          <p className="text-muted-foreground">
+            Monitor your game performance and player engagement metrics
+            {selectedGame && selectedGameId !== 'all' && (
+              <span className="ml-2 text-blue-600">
+                • Filtering by: {selectedGame.title}
+              </span>
+            )}
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Select value={period} onValueChange={(value: string) => setPeriod(value as '7d' | '30d' | '90d' | 'all')}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="90d">Last 90 days</SelectItem>
+              <SelectItem value="all">All time</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button onClick={fetchAnalyticsData} variant="outline" size="sm">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Filters Section */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Filters
+          </CardTitle>
           <CardDescription>
-            Filter your analytics data by game, region, currency, and date range
+            Filter your analytics data by game and time period
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Game Selection */}
             <div className="space-y-2">
               <Label htmlFor="game-select">Game</Label>
               <Select
-                value={filters.gameId || ''}
-                onValueChange={(value) => handleFilterChange('gameId', value)}
+                value={selectedGameId}
+                onValueChange={setSelectedGameId}
               >
                 <SelectTrigger id="game-select">
                   <SelectValue placeholder="Select a game" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all">All Games</SelectItem>
                   {games.map((game) => (
                     <SelectItem key={game.id} value={game.id}>
                       {game.title}
@@ -170,63 +293,30 @@ export default function AnalyticsPage() {
               </Select>
             </div>
 
-            {/* Country Filter */}
+            {/* Time Period */}
             <div className="space-y-2">
-              <Label htmlFor="country-input">Country</Label>
-              <Input
-                id="country-input"
-                placeholder="e.g., USA"
-                value={filters.country || ''}
-                onChange={(e) => handleFilterChange('country', e.target.value)}
-                maxLength={3}
-              />
+              <Label htmlFor="period-select">Time Period</Label>
+              <Select
+                value={period}
+                onValueChange={(value: string) => setPeriod(value as '7d' | '30d' | '90d' | 'all')}
+              >
+                <SelectTrigger id="period-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">Last 7 days</SelectItem>
+                  <SelectItem value="30d">Last 30 days</SelectItem>
+                  <SelectItem value="90d">Last 90 days</SelectItem>
+                  <SelectItem value="all">All time</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-
-            {/* Currency Filter */}
-            <div className="space-y-2">
-              <Label htmlFor="currency-input">Currency</Label>
-              <Input
-                id="currency-input"
-                placeholder="e.g., USD"
-                value={filters.currency || ''}
-                onChange={(e) => handleFilterChange('currency', e.target.value)}
-                maxLength={3}
-              />
-            </div>
-
-            {/* Start Date */}
-            <div className="space-y-2">
-              <Label htmlFor="start-date">Start Date</Label>
-              <Input
-                id="start-date"
-                type="date"
-                value={filters.startDate || ''}
-                onChange={(e) => handleFilterChange('startDate', e.target.value)}
-              />
-            </div>
-
-            {/* End Date */}
-            <div className="space-y-2">
-              <Label htmlFor="end-date">End Date</Label>
-              <Input
-                id="end-date"
-                type="date"
-                value={filters.endDate || ''}
-                onChange={(e) => handleFilterChange('endDate', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-2 mt-4">
-            <Button variant="outline" onClick={resetFilters}>
-              Reset
-            </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Selected Game Info */}
-      {selectedGame && (
+      {selectedGame && selectedGameId !== 'all' && (
         <div className="mb-6">
           <div className="flex items-center gap-2">
             <Badge variant="secondary">Selected Game</Badge>
@@ -238,49 +328,132 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      {/* Error Display */}
-      {error && (
-        <Card className="mb-8 border-red-200 bg-red-50">
-          <CardContent className="pt-6">
-            <p className="text-red-600">{error}</p>
-          </CardContent>
-        </Card>
+      {/* Stats Cards */}
+      {dashboardStats && (
+        <div className="mb-8">
+          <DashboardStatsCards stats={dashboardStats} />
+        </div>
       )}
 
-      {/* Metrics Display */}
-      {metrics && !loading && (
-        <>
-          {/* Metrics Cards */}
-          <MetricsCards metrics={metrics} />
-
-          {/* Charts */}
-          <AnalyticsCharts 
-            metrics={metrics} 
-            gameId={filters.gameId}
-            dateRange={{
-              startDate: filters.startDate,
-              endDate: filters.endDate,
-            }}
-          />
-        </>
-      )}
-
-      {/* Loading State */}
-      {loading && (
-        <div className="flex justify-center items-center py-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading analytics data...</p>
+      {/* Charts Grid */}
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Top Games Charts */}
+        {topGamesData && (
+          <div>
+            <TopGamesCharts data={topGamesData} />
           </div>
+        )}
+
+        {/* Country Statistics */}
+        {countryStatsData && (
+          <div>
+            <CountryStatsCharts data={countryStatsData} />
+          </div>
+        )}
+      </div>
+
+      {/* Recent Activity Chart */}
+      {dashboardStats?.recentActivity && (
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Recent Activity (Last 7 Days)
+              </CardTitle>
+              <CardDescription>
+                Daily trends for revenue, players, and spins
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={dashboardStats.recentActivity}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="date"
+                      tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                    />
+                    <YAxis yAxisId="left" />
+                    <YAxis yAxisId="right" orientation="right" />
+                    <Tooltip
+                      labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                      formatter={(value: number, name: string) => [
+                        name === 'revenue' ? formatCurrency(value) : formatNumber(value),
+                        name.charAt(0).toUpperCase() + name.slice(1)
+                      ]}
+                    />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#8884d8"
+                      strokeWidth={2}
+                      name="Revenue"
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="players"
+                      stroke="#82ca9d"
+                      strokeWidth={2}
+                      name="Players"
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="spins"
+                      stroke="#ffc658"
+                      strokeWidth={2}
+                      name="Spins"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Top Performing Game */}
+      {dashboardStats?.topPerformingGame && (
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-yellow-500" />
+                Top Performing Game
+              </CardTitle>
+              <CardDescription>
+                Your best performing game this period
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
+                <div>
+                  <h3 className="text-xl font-bold">{dashboardStats.topPerformingGame.title}</h3>
+                  <p className="text-muted-foreground">Game ID: {dashboardStats.topPerformingGame.id}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-green-600">
+                    {formatCurrency(dashboardStats.topPerformingGame.revenue)}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatNumber(dashboardStats.topPerformingGame.players)} players
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
 
       {/* No Data State */}
-      {!metrics && !loading && !error && games.length === 0 && (
+      {!dashboardStats && !isLoading && !error && games.length === 0 && (
         <Card>
           <CardContent className="pt-6 text-center">
             <p className="text-gray-600 mb-4">No games found. Create a game first to view analytics.</p>
-            <Button onClick={() => window.location.href = '/builder'}>
+            <Button onClick={() => window.location.href = '/builder?create=true'}>
               Create Your First Game
             </Button>
           </CardContent>

@@ -4,7 +4,7 @@ import { SlotItem } from '@/types/SlotItem';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import { XCircle } from 'lucide-react';
+import { PencilIcon, XCircle, XIcon } from 'lucide-react';
 
 interface SlotItemPreviewProps {
   item: SlotItem;
@@ -14,21 +14,8 @@ interface SlotItemPreviewProps {
 
 export function SlotItemPreview({ item, onRemove, onEdit }: SlotItemPreviewProps) {
   return (
-    <Card className="mt-4">
-      <CardHeader>
-        <CardTitle className="text-md mx-auto">{item.name || 'Unnamed'}</CardTitle>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="absolute top-2 right-2 text-muted-foreground hover:text-destructive"
-          onClick={onRemove}
-        >
-          <XCircle className="h-5 w-5" />
-        </Button>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center space-y-2">
+    <Card>
+      <CardContent className="flex flex-row items-center gap-4">
         {item.imageKey ? (
           <div className="relative w-24 h-24">
             <Image
@@ -44,10 +31,30 @@ export function SlotItemPreview({ item, onRemove, onEdit }: SlotItemPreviewProps
             No Image
           </div>
         )}
-        <p className="text-sm">Prob: {(item.probability * 100).toFixed(1)}%</p>
-        <p className="text-sm">Rev: {item.revenue}</p>
-        <p className="text-sm">Min Count: {item.minimumCount}</p>
-        <p className="text-sm">Diagonal: {item.diagonalPrize ? 'Yes' : 'No'}</p>
+        <div className='text-sm flex flex-col'>
+          <strong className='text-base'>{item.name || 'Unnamed'}</strong>
+          <p className="text-sm">Prob: {(item.probability * 100).toFixed(1)}%</p>
+          <p className="text-sm">Rev: {item.revenue}</p>
+          <p className="text-sm">Min Count: {item.minimumCount}</p>
+          <p className="text-sm">Diagonal: {item.diagonalPrize ? 'Yes' : 'No'}</p>
+        </div>
+        <div className='flex flex-col gap-2 ml-auto'>
+          <Button
+            size="icon"
+            type="button"
+            variant="destructive"
+            onClick={onRemove}
+          >
+            <XIcon className="h-4 w-4" />
+          </Button>
+          <Button
+            size="icon"
+            type="button"
+            onClick={onRemove}
+          >
+            <PencilIcon className="h-5 w-5" />
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

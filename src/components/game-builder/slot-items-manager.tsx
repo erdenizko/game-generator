@@ -121,13 +121,13 @@ export function SlotItemsManager({ slotItems, onSlotItemsChange, gameId }: SlotI
   }, [importExportData, onSlotItemsChange, toast]);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col items-center h-full space-y-6">
 
       {safeSlotItems.length === 0 && (
         <p className="text-center text-muted-foreground">{`No slot items defined yet. Click 'Add Slot Item' to get started.`}</p>
       )}
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 w-full">
         {safeSlotItems.map((item, index) => {
           if (isEditing === item.id) {
             return (

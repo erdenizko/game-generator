@@ -16,7 +16,7 @@ interface LanguagesSectionProps {
   form: UseFormReturn<UpdateGameRequest>;
 }
 
-const COMMON_LOCALES = [
+export const COMMON_LOCALES = [
   { code: 'en', name: 'English' },
   { code: 'es', name: 'Spanish' },
   { code: 'fr', name: 'French' },
@@ -34,7 +34,7 @@ const COMMON_LOCALES = [
   { code: 'nl', name: 'Dutch' },
 ];
 
-const DEFAULT_STRINGS = {
+export const DEFAULT_STRINGS = {
   'game.title': 'Slot Game',
   'game.spin': 'Spin',
   'game.bet': 'Bet',
@@ -93,12 +93,12 @@ export function LanguagesSection({ form }: LanguagesSectionProps) {
     try {
       const parsedStrings = JSON.parse(stringsText);
       const currentLanguage = fields[editingLanguage];
-      
+
       update(editingLanguage, {
         ...currentLanguage,
         strings: parsedStrings,
       });
-      
+
       setEditingLanguage(null);
       setStringsText('');
     } catch (error) {
@@ -135,8 +135,8 @@ export function LanguagesSection({ form }: LanguagesSectionProps) {
             </SelectTrigger>
             <SelectContent>
               {COMMON_LOCALES.map((locale) => (
-                <SelectItem 
-                  key={locale.code} 
+                <SelectItem
+                  key={locale.code}
                   value={locale.code}
                   disabled={fields.some(field => field.locale === locale.code)}
                 >
@@ -289,7 +289,7 @@ export function LanguagesSection({ form }: LanguagesSectionProps) {
         {fields.length > 0 && (
           <div className="mt-4 p-4 bg-muted/50 rounded-lg">
             <p className="text-sm text-muted-foreground">
-              <strong>Tip:</strong> The first language in the list will be used as the default. 
+              <strong>Tip:</strong> The first language in the list will be used as the default.
               Make sure to include all necessary game strings for each language.
             </p>
           </div>

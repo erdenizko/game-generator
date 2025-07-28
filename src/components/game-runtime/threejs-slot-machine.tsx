@@ -5,7 +5,7 @@ import { Canvas, useLoader } from '@react-three/fiber';
 import { Plane, Box } from '@react-three/drei';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
-import { RotateCcwIcon } from 'lucide-react';
+import { Play, RotateCcwIcon } from 'lucide-react';
 
 // Slot machine symbols data
 const SYMBOLS = [
@@ -151,7 +151,7 @@ const SlotReel = memo(({
         // Phase 2: Fast spinning
         timeline.to(meshRef.current.position, {
             y: -50,
-            duration: 1.2,
+            duration: 2,
             ease: "power2.in",
             onComplete: () => {
                 setSymbolOrder(prev => {
@@ -178,24 +178,10 @@ const SlotReel = memo(({
 
         // Phase 3: Slow down and land
         timeline.to(meshRef.current.position, {
-            y: -55.5,
-            duration: 1.2,
-            ease: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
-        }, delay + 1.2);
-
-        // Phase 3: Slow down and land
-        timeline.to(meshRef.current.position, {
-            y: -55.1,
-            duration: 0.3,
-            ease: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
-        }, delay + 2.6);
-
-        // Phase 3: Slow down and land
-        timeline.to(meshRef.current.position, {
             y: -55.2,
-            duration: 0.5,
-            ease: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
-        }, delay + 2.9);
+            duration: 2,
+            ease: "elastic.out(1, 0.4)",
+        }, delay + 2);
     };
 
     // Auto-spin after component mounts
@@ -321,25 +307,15 @@ const ThreeJSSlotMachine = memo(() => {
     }), []);
 
     return (
-        <div className="container relative flex flex-col justify-center items-start" style={{
+        <div className="container relative flex flex-col rounded-4xl justify-center items-start shadow-2xl shadow-zinc-800" style={{
             width: '100%',
             willChange: 'transform',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             transform: 'translateZ(0)', // Force GPU layer
         }}>
-            <div className=" relative" style={{
-                width: '100%',
-                aspectRatio: '2/1',
-                height: 'auto',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundColor: 'rgb(255, 255, 255)',
+            <div className="relative bg-zinc-800 aspect-2/1 w-full h-auto border-4 border-zinc-700 rounded-4xl overflow-hidden" style={{
                 boxShadow: 'rgb(0 0 0) 0px 0px 20px 0px inset',
-                borderRadius: '100px',
-                overflow: 'hidden',
-                border: '4px solid rgba(0, 0, 0, 0.1)',
             }}>
                 <Canvas {...canvasProps}>
 
@@ -347,42 +323,42 @@ const ThreeJSSlotMachine = memo(() => {
                     {/* Reels */}
                     <SlotReel
                         index={0}
-                        position={[-2.92, -2.41, 1.25]}
+                        position={[-2.98, -2.41, 1.25]}
                         delay={0}
                         onSpinComplete={handleSpinComplete}
                         spinCount={spinCount}
                     />
                     <SlotReel
                         index={1}
-                        position={[-1.73, -2.41, 1.25]}
+                        position={[-1.77, -2.41, 1.25]}
                         delay={0.1}
                         onSpinComplete={handleSpinComplete}
                         spinCount={spinCount}
                     />
                     <SlotReel
                         index={2}
-                        position={[-0.55, -2.41, 1.25]}
+                        position={[-0.58, -2.41, 1.25]}
                         delay={0.2}
                         onSpinComplete={handleSpinComplete}
                         spinCount={spinCount}
                     />
                     <SlotReel
                         index={3}
-                        position={[0.59, -2.41, 1.25]}
+                        position={[0.61, -2.41, 1.25]}
                         delay={0.2}
                         onSpinComplete={handleSpinComplete}
                         spinCount={spinCount}
                     />
                     <SlotReel
                         index={4}
-                        position={[1.73, -2.41, 1.25]}
+                        position={[1.79, -2.41, 1.25]}
                         delay={0.2}
                         onSpinComplete={handleSpinComplete}
                         spinCount={spinCount}
                     />
                     <SlotReel
                         index={5}
-                        position={[2.9, -2.41, 1.25]}
+                        position={[2.98, -2.41, 1.25]}
                         delay={0.2}
                         onSpinComplete={handleSpinComplete}
                         spinCount={spinCount}
@@ -393,68 +369,39 @@ const ThreeJSSlotMachine = memo(() => {
                 <div className="absolute inset-0">
                     {/* Reel separators */}
                     <div
-                        className="absolute left-1/6 top-0 bottom-0 w-1 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 1))",
-                            boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)"
-                        }}
+                        className="absolute left-1/6 top-0 bottom-0 w-1 pointer-events-none shadow-2xl shadow-purple-600 bg-radial bg-from-zinc-800 via-zinc-900 to-zinc-800"
                     />
                     <div
-                        className="absolute left-2/6 top-0 bottom-0 w-1 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 1))",
-                            boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)"
-                        }}
+                        className="absolute left-2/6 top-0 bottom-0 w-1 pointer-events-none shadow-2xl shadow-purple-600 bg-radial bg-from-zinc-800 via-zinc-900 to-zinc-800"
                     />
                     <div
-                        className="absolute left-3/6 top-0 bottom-0 w-1 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 1))",
-                            boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)"
-                        }}
+                        className="absolute left-3/6 top-0 bottom-0 w-1 pointer-events-none shadow-2xl shadow-purple-600 bg-radial bg-from-zinc-800 via-zinc-900 to-zinc-800"
                     />
                     <div
-                        className="absolute left-4/6 top-0 bottom-0 w-1 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 1))",
-                            boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)"
-                        }}
+                        className="absolute left-4/6 top-0 bottom-0 w-1 pointer-events-none shadow-2xl shadow-purple-600 bg-radial bg-from-zinc-800 via-zinc-900 to-zinc-800"
                     />
                     <div
-                        className="absolute left-5/6 top-0 bottom-0 w-1 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 1))",
-                            boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)"
-                        }}
+                        className="absolute left-5/6 top-0 bottom-0 w-1 pointer-events-none shadow-2xl shadow-purple-600 bg-radial bg-from-zinc-800 via-zinc-900 to-zinc-800"
                     />
 
                     {/* Center highlight */}
                     <div
-                        className="absolute top-1/3 left-0 right-0 h-1/3 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3), transparent)",
-                            boxShadow: "inset 0 0 20px rgba(255, 255, 255, 0.1)"
-                        }}
+                        className="absolute blur-lg top-1/3 left-0 right-0 h-1/3 pointer-events-none bg-gradient-to-r from-transparent via-white/10 to-transparent shadow-2xl shadow-black/10"
                     />
                 </div>
             </div>
 
-            <div className="-mt-14 mx-auto z-50 relative flex justify-center items-center">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-50 flex justify-center items-center">
                 <button
                     className="rounded-full bg-foreground text-background p-8 transition-all duration-500 relative overflow-hidden group"
                     onClick={() => {
                         setSpinCount(prev => prev + 1);
                     }}
                 >
-                    {/* Animated gradient overlay */}
-                    <span
-                        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 60%, #fbcfe8 100%)"
-                        }}
-                    />
-                    <span className="relative z-10 flex items-center justify-center">
-                        <RotateCcwIcon className="w-10 h-10" />
+                    <span className='absolute inset-0 bg-radial from-rose-400 via-rose-500 to-orange-500 pointer-none border-4 border-rose-400 rounded-full'></span>
+                    <span className="relative z-10 flex items-center gap-2 justify-center">
+                        <Play className='w-8 h-8' />
+                        <span className='text-3xl font-mono'>Start Building Now!</span>
                     </span>
                 </button>
             </div>

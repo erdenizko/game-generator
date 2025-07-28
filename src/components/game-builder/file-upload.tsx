@@ -167,14 +167,14 @@ export function FileUpload({
         <Card
           {...getRootProps()}
           className={cn(
-            'border-2 border-dashed cursor-pointer transition-colors hover:border-primary/50',
+            'border-2 border-dashed cursor-pointer transition-colors hover:border-primary/50 p-0',
             isDragActive && 'border-primary bg-primary/5',
             error && 'border-destructive',
             isUploading && 'pointer-events-none opacity-50'
           )}
         >
           <input {...getInputProps()} />
-          <div className="flex flex-col items-center justify-center p-6 text-center">
+          <div className="flex flex-col items-center justify-center p-4 text-center">
             {isUploading ? (
               <>
                 <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
@@ -193,25 +193,27 @@ export function FileUpload({
                 )}
               </>
             ) : (
-              <>
-                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                <p className="text-sm font-medium">
-                  {isDragActive ? 'Drop file here' : 'Click to upload or drag and drop'}
-                </p>
-                {description && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {description}
+              <div className='flex flex-row gap-4 items-center'>
+                <Upload className="h-6 w-6 text-muted-foreground" />
+                <div className='flex flex-col items-start'>
+                  <p className="text-sm font-medium">
+                    {isDragActive ? 'Drop file here' : 'Click to upload or drag and drop'}
                   </p>
-                )}
-                <p className="text-xs text-muted-foreground mt-1">
-                  Max size: {formatFileSize(maxSize)}
-                </p>
-              </>
+                  {description && (
+                    <p className="text-xs text-muted-foreground">
+                      {description}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Max size: {formatFileSize(maxSize)}
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </Card>
       ) : (
-        <Card className="p-4">
+        <Card className="p-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {getFileIcon(value)}
