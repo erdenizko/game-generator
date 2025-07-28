@@ -6,7 +6,7 @@ import { ColorThemeProvider } from '@/components/game-builder/color-theme-provid
 import { Music, Settings, Minus, Plus, Play, RotateCcw } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { cn, getButtonStyle } from '@/lib/utils';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { gsap } from 'gsap';
 
 interface DesktopGameRendererProps extends GameRendererBaseProps {
@@ -49,148 +49,118 @@ export default function DesktopGameRenderer({
         initialBalance,
     });
 
-    // Enhanced 3D cylinder spinning state
-    const [reelStates, setReelStates] = useState<Array<{
-        rotation: number;
-        symbols: string[];
-        isSpinning: boolean;
-        velocity: number;
-    }>>([]);
+    // High-performance reel state - minimal React state
+    const [isAnimating, setIsAnimating] = useState(false);
+    const animationRefs = useRef<gsap.core.Timeline[]>([]);
+    const reelDataRef = useRef<{
+        symbols: string[][];
+        finalSymbols: string[][] | null;
+    }>({
+        symbols: [],
+        finalSymbols: null
+    });
 
-    // Calculate optimal dimensions for crisp rendering
-    const SYMBOLS_PER_REEL = 12; // Reduced for better performance
-    const CYLINDER_RADIUS = 120; // Fixed radius for consistent perspective
-    const SYMBOL_ANGLE = 360 / SYMBOLS_PER_REEL;
+    // Performance constants
+    const VISIBLE_SYMBOLS = gameConfig.rows; // Only render visible symbols
+    const BUFFER_SYMBOLS = 2; // Minimal buffer for smooth transitions
+    const TOTAL_SYMBOLS = VISIBLE_SYMBOLS + BUFFER_SYMBOLS;
 
-    // Initialize reel states with better symbol distribution
-    useEffect(() => {
-        const initialStates = Array.from({ length: gameConfig.columns }, (_, colIndex) => {
-            // Create a pool of symbols with proper distribution
-            const symbolPool = [...gameConfig.slotItems];
-            const extendedPool: typeof symbolPool = [];
-            
-            // Ensure we have enough symbols by repeating the pool
-            while (extendedPool.length < SYMBOLS_PER_REEL) {
-                extendedPool.push(...symbolPool);
-            }
-            
-            // Take random symbols from the pool
-            const symbols = Array.from({ length: SYMBOLS_PER_REEL }, (_, index) => {
-                if (index < gameConfig.rows) {
-                    return gameMatrix[index]?.[colIndex] || symbolPool[0]?.id || 'default';
+    // Memoized symbol data to prevent recalculations
+    const symbolData = useMemo(() => {
+        const data: string[][] = [];
+        for (let col = 0; col < gameConfig.columns; col++) {
+            const columnSymbols: string[] = [];
+            for (let row = 0; row < TOTAL_SYMBOLS; row++) {
+                if (row < gameConfig.rows) {
+                    columnSymbols.push(gameMatrix[row]?.[col] || gameConfig.slotItems[0]?.id || 'default');
+                } else {
+                    // Buffer symbols
+                    const symbolIndex = (row - gameConfig.rows) % gameConfig.slotItems.length;
+                    columnSymbols.push(gameConfig.slotItems[symbolIndex]?.id || 'default');
                 }
-                return extendedPool[index % extendedPool.length]?.id || 'default';
-            });
+            }
+            data.push(columnSymbols);
+        }
+        return data;
+    }, [gameConfig, gameMatrix]);
 
-            return {
-                rotation: 0,
-                symbols,
-                isSpinning: false,
-                velocity: 0
-            };
-        });
-        setReelStates(initialStates);
-    }, [gameConfig.columns, gameConfig.rows, gameConfig.slotItems, gameMatrix]);
+    // Initialize reel data
+    useEffect(() => {
+        reelDataRef.current.symbols = symbolData;
+    }, [symbolData]);
 
-    // Enhanced 3D cylinder spinning animation with elastic bounce
-    const animateReelSpin3D = useCallback((reelIndex: number, finalSymbols: string[]) => {
+    // High-performance animation using direct DOM manipulation
+    const animateReelSpin = useCallback((reelIndex: number, finalSymbols: string[], delay: number = 0) => {
         const reel = reelsRef.current[reelIndex];
         if (!reel) return Promise.resolve();
 
         return new Promise<void>((resolve) => {
-            // Update reel state to spinning
-            setReelStates(prev => prev.map((state, index) =>
-                index === reelIndex ? { ...state, isSpinning: true, velocity: 1 } : state
-            ));
+            // Clean up any existing animation
+            const existingAnimation = animationRefs.current[reelIndex];
+            if (existingAnimation) {
+                existingAnimation.kill();
+            }
 
-            // Create main timeline
-            const tl = gsap.timeline({ 
+            // Pre-calculate animation values for better performance
+            const duration = 1.5;
+            const totalRotations = 5 + (reelIndex * 0.5);
+            const finalRotation = totalRotations * 360;
+
+            // Create optimized timeline with minimal callbacks
+            const tl = gsap.timeline({
+                delay,
                 onComplete: () => {
-                    // Final state update
-                    setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { 
-                            ...state, 
-                            isSpinning: false, 
-                            velocity: 0,
-                            symbols: finalSymbols,
-                            rotation: 0
-                        } : state
-                    ));
+                    // Update symbols only once at the end
+                    if (reelDataRef.current.finalSymbols) {
+                        reelDataRef.current.symbols[reelIndex] = [...reelDataRef.current.finalSymbols[reelIndex]];
+                        
+                        // Force re-render only for this reel's symbols
+                        const symbols = reel.querySelectorAll('.symbol');
+                        symbols.forEach((symbolEl, symbolIndex) => {
+                            if (symbolIndex < TOTAL_SYMBOLS) {
+                                const symbolId = finalSymbols[symbolIndex];
+                                const slotItem = getEnhancedSlotItem(symbolId);
+                                const img = symbolEl.querySelector('img');
+                                if (img && slotItem?.imageKey) {
+                                    img.src = slotItem.imageKey;
+                                    img.alt = slotItem.name || 'Unknown';
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Reset transform for next animation
+                    gsap.set(reel, { rotationX: 0 });
                     resolve();
                 }
             });
 
-            // Calculate final position to land on correct symbols
-            const totalSpins = 3 + (reelIndex * 0.3); // Staggered stopping
-            const finalRotation = totalSpins * 360;
-            
-            // Phase 1: Accelerate (0.3s)
-            tl.to(reel, {
-                rotationX: finalRotation * 0.2,
-                duration: 0.3,
-                ease: 'power2.out',
-                onUpdate: function () {
-                    const currentRotation = this.targets()[0]._gsap.rotationX || 0;
-                    const velocity = Math.abs(this.progress() - (this.prevProgress || 0));
-                    setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { 
-                            ...state, 
-                            rotation: currentRotation,
-                            velocity: velocity * 10
-                        } : state
-                    ));
-                    this.prevProgress = this.progress();
-                }
-            });
-
-            // Phase 2: Constant speed (0.6s)
-            tl.to(reel, {
-                rotationX: finalRotation * 0.8,
-                duration: 0.6,
-                ease: 'none',
-                onUpdate: function () {
-                    const currentRotation = this.targets()[0]._gsap.rotationX || 0;
-                    setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { 
-                            ...state, 
-                            rotation: currentRotation,
-                            velocity: 1
-                        } : state
-                    ));
-                },
-                onStart: () => {
-                    // Update symbols during constant speed phase for smooth transition
-                    setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { ...state, symbols: finalSymbols } : state
-                    ));
-                }
-            });
-
-            // Phase 3: Elastic deceleration with bounce (0.9s)
+            // Single smooth animation with GPU acceleration
             tl.to(reel, {
                 rotationX: finalRotation,
-                duration: 0.9,
-                ease: 'elastic.out(1, 0.6)', // Strong elastic bounce
-                onUpdate: function () {
-                    const currentRotation = this.targets()[0]._gsap.rotationX || 0;
-                    const velocity = Math.abs(this.progress() - (this.prevProgress || 0));
-                    setReelStates(prev => prev.map((state, index) =>
-                        index === reelIndex ? { 
-                            ...state, 
-                            rotation: currentRotation,
-                            velocity: velocity * 5
-                        } : state
-                    ));
-                    this.prevProgress = this.progress();
-                }
+                duration,
+                ease: "power3.out",
+                force3D: true, // Force GPU acceleration
+                transformOrigin: "50% 50% 0px"
             });
+
+            // Add elastic bounce only at the end
+            tl.to(reel, {
+                rotationX: finalRotation,
+                duration: 0.4,
+                ease: "elastic.out(0.8, 0.3)",
+                force3D: true
+            });
+
+            animationRefs.current[reelIndex] = tl;
         });
-    }, [reelsRef]);
+    }, [reelsRef, getEnhancedSlotItem, TOTAL_SYMBOLS]);
 
-    // Enhanced spin handler
+    // Optimized spin handler
     const handleSpin3D = useCallback(async () => {
-        if (isSpinning || currentBet > balance) return;
+        if (isAnimating || currentBet > balance) return;
 
+        setIsAnimating(true);
         setIsSpinning(true);
         setWinningLines([]);
         setLastWin(0);
@@ -203,29 +173,25 @@ export default function DesktopGameRenderer({
                 throw new Error('No spin handler provided');
             }
 
-            // Create staggered animations for each reel
-            const spinPromises: Promise<void>[] = [];
+            // Prepare final symbols
+            const finalSymbolsData: string[][] = [];
             for (let col = 0; col < gameConfig.columns; col++) {
                 const columnSymbols = spinResult.view.map((row: string[]) => row[col]);
-                
-                // Extend column symbols to fill the cylinder
-                const extendedSymbols = [...columnSymbols];
-                while (extendedSymbols.length < SYMBOLS_PER_REEL) {
-                    extendedSymbols.push(...gameConfig.slotItems.map(item => item.id));
-                }
-                
-                const finalSymbols = extendedSymbols.slice(0, SYMBOLS_PER_REEL);
-                const delay = col * 0.1; // Stagger start times
-                
-                setTimeout(() => {
-                    spinPromises.push(animateReelSpin3D(col, finalSymbols));
-                }, delay * 1000);
+                // Add buffer symbols
+                const bufferSymbols = gameConfig.slotItems.slice(0, BUFFER_SYMBOLS).map(item => item.id);
+                finalSymbolsData.push([...columnSymbols, ...bufferSymbols]);
             }
 
-            // Wait for all reels to finish
+            reelDataRef.current.finalSymbols = finalSymbolsData;
+
+            // Animate all reels with staggered delays
+            const spinPromises = Array.from({ length: gameConfig.columns }, (_, col) => 
+                animateReelSpin(col, finalSymbolsData[col], col * 0.1)
+            );
+
             await Promise.all(spinPromises);
 
-            // Update game state
+            // Update game state once at the end
             setGameMatrix(spinResult.view);
             setBalance(spinResult.balance);
             setLastWin(spinResult.winAmount);
@@ -237,9 +203,53 @@ export default function DesktopGameRenderer({
         } catch (error) {
             console.error('Spin failed:', error);
         } finally {
+            setIsAnimating(false);
             setIsSpinning(false);
         }
-    }, [isSpinning, currentBet, balance, onSpin, onBalanceUpdate, gameConfig.columns, gameConfig.slotItems, animateReelSpin3D, setGameMatrix, setBalance, setLastWin, setWinningLines, setIsSpinning]);
+    }, [isAnimating, currentBet, balance, onSpin, onBalanceUpdate, gameConfig.columns, animateReelSpin, setGameMatrix, setBalance, setLastWin, setWinningLines, setIsSpinning, gameConfig.slotItems, BUFFER_SYMBOLS]);
+
+    // Cleanup animations on unmount
+    useEffect(() => {
+        return () => {
+            animationRefs.current.forEach(tl => tl?.kill());
+        };
+    }, []);
+
+    // Memoized symbol component for better performance
+    const renderSymbol = useCallback((symbolId: string, symbolIndex: number, colIndex: number, isWinning: boolean) => {
+        const slotItem = getEnhancedSlotItem(symbolId);
+        const angle = (symbolIndex / TOTAL_SYMBOLS) * 360;
+        const isVisible = symbolIndex < gameConfig.rows;
+
+        return (
+            <div
+                key={`${colIndex}-${symbolIndex}`}
+                className={cn(
+                    "symbol absolute w-full bg-white flex items-center justify-center overflow-hidden",
+                    isWinning && "ring-2 ring-yellow-400"
+                )}
+                style={{
+                    height: `${100 / gameConfig.rows}%`,
+                    transform: `rotateX(${angle}deg) translateZ(80px)`, // Reduced radius for better performance
+                    transformOrigin: '50% 50%',
+                    backfaceVisibility: 'hidden',
+                    willChange: 'transform',
+                    opacity: isVisible ? 1 : 0.3
+                }}
+            >
+                <img
+                    src={slotItem?.imageKey || '/placeholder-symbol.svg'}
+                    alt={slotItem?.name || 'Unknown'}
+                    className="w-4/5 h-4/5 object-contain"
+                    loading="lazy"
+                    draggable={false}
+                />
+                {isWinning && (
+                    <div className="absolute inset-0 bg-yellow-400 bg-opacity-20" />
+                )}
+            </div>
+        );
+    }, [getEnhancedSlotItem, gameConfig.rows, TOTAL_SYMBOLS]);
 
     return (
         <ColorThemeProvider theme={colorTheme}>
@@ -254,7 +264,7 @@ export default function DesktopGameRenderer({
             >
                 {/* Top Row: Game Name */}
                 <div className={cn("flex justify-center items-center py-4 h-1/7", gameConfig.mascot.enabled ? 'pl-20' : 'pl-0')}>
-                    <h2 className="game-title text-3xl font-bold text-white  py-2 rounded-lg">
+                    <h2 className="game-title text-3xl font-bold text-white py-2 rounded-lg">
                         {gameConfig.title}
                     </h2>
                 </div>
@@ -284,96 +294,47 @@ export default function DesktopGameRenderer({
                                 backgroundPosition: 'center'
                             }}
                         >
-                            {/* Enhanced Reels Grid with better 3D perspective */}
-                            <div className="reels-grid h-full rounded-lg overflow-hidden bg-white flex flex-row"
+                            {/* High-Performance Reels Grid */}
+                            <div 
+                                className="reels-grid h-full rounded-lg overflow-hidden bg-white flex flex-row"
                                 style={{
-                                    perspective: '2000px', // Increased perspective for less distortion
+                                    perspective: '1200px', // Optimized perspective
                                     perspectiveOrigin: '50% 50%'
                                 }}
                             >
-                                {Array.from({ length: gameConfig.columns }).map((_, colIndex) => {
-                                    const reelState = reelStates[colIndex];
-
-                                    return (
+                                {Array.from({ length: gameConfig.columns }).map((_, colIndex) => (
+                                    <div
+                                        key={colIndex}
+                                        className="reel-container h-full relative"
+                                        style={{
+                                            width: `${100 / gameConfig.columns}%`,
+                                            transform: 'translateZ(0)', // Force GPU layer
+                                        }}
+                                    >
                                         <div
-                                            key={colIndex}
-                                            className="reel-container h-full relative"
+                                            ref={el => { if (el) reelsRef.current[colIndex] = el; }}
+                                            className="reel h-full relative"
                                             style={{
-                                                width: `${100 / gameConfig.columns}%`,
+                                                transformStyle: 'preserve-3d',
+                                                transformOrigin: '50% 50% 0px',
+                                                backfaceVisibility: 'hidden',
+                                                willChange: 'transform'
                                             }}
                                         >
-                                            <div
-                                                ref={el => { if (el) reelsRef.current[colIndex] = el; }}
-                                                className="reel h-full relative"
-                                                style={{
-                                                    transformStyle: 'preserve-3d',
-                                                    transform: `rotateX(${reelState?.rotation || 0}deg)`,
-                                                    transformOrigin: `50% 50% 0px`,
-                                                    // Enhanced rendering for crisp visuals
-                                                    backfaceVisibility: 'hidden',
-                                                    willChange: 'transform',
-                                                    filter: reelState?.isSpinning ? 
-                                                        `blur(${Math.min(reelState.velocity * 2, 4)}px)` : 'none',
-                                                    transition: reelState?.isSpinning ? 'none' : 'filter 0.3s ease-out'
-                                                }}
-                                            >
-                                                {/* Enhanced Symbol Rendering */}
-                                                {Array.from({ length: SYMBOLS_PER_REEL }).map((_, symbolIndex) => {
-                                                    const symbolId = reelState?.symbols?.[symbolIndex] || 
-                                                                   gameMatrix[symbolIndex % gameConfig.rows]?.[colIndex] || 
-                                                                   gameConfig.slotItems[0]?.id;
-                                                    
-                                                    const isVisible = symbolIndex < gameConfig.rows;
-                                                    const isWinning = isVisible && winningLines.some(line =>
-                                                        line.some(pos => 
-                                                            Math.floor(pos / gameConfig.columns) === symbolIndex && 
-                                                            pos % gameConfig.columns === colIndex
-                                                        )
-                                                    );
-                                                    
-                                                    const slotItem = getEnhancedSlotItem(symbolId);
-                                                    const angle = symbolIndex * SYMBOL_ANGLE;
-
-                                                    return (
-                                                        <div
-                                                            key={`${colIndex}-${symbolIndex}`}
-                                                            className={cn(
-                                                                "symbol absolute w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-200",
-                                                                "transition-all duration-300",
-                                                                isWinning && "ring-4 ring-yellow-400 shadow-lg shadow-yellow-400/50 z-10"
-                                                            )}
-                                                            style={{
-                                                                height: `${100 / gameConfig.rows}%`,
-                                                                transform: `rotateX(${angle}deg) translateZ(${CYLINDER_RADIUS}px)`,
-                                                                transformOrigin: '50% 50%',
-                                                                backfaceVisibility: 'hidden',
-                                                                // Enhanced visual quality
-                                                                imageRendering: 'crisp-edges',
-                                                                WebkitFontSmoothing: 'antialiased',
-                                                                opacity: isVisible ? 1 : 0.7
-                                                            }}
-                                                        >
-                                                            <img
-                                                                src={slotItem?.imageKey || '/placeholder-symbol.svg'}
-                                                                alt={slotItem?.name || 'Unknown'}
-                                                                className="w-full h-full object-contain p-1"
-                                                                loading="lazy"
-                                                                style={{
-                                                                    imageRendering: 'crisp-edges',
-                                                                    maxWidth: '90%',
-                                                                    maxHeight: '90%'
-                                                                }}
-                                                            />
-                                                            {isWinning && (
-                                                                <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse" />
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
+                                            {/* Optimized Symbol Rendering - Only visible + buffer */}
+                                            {symbolData[colIndex]?.slice(0, TOTAL_SYMBOLS).map((symbolId, symbolIndex) => {
+                                                const isVisible = symbolIndex < gameConfig.rows;
+                                                const isWinning = isVisible && winningLines.some(line =>
+                                                    line.some(pos => 
+                                                        Math.floor(pos / gameConfig.columns) === symbolIndex && 
+                                                        pos % gameConfig.columns === colIndex
+                                                    )
+                                                );
+                                                return renderSymbol(symbolId, symbolIndex, colIndex, isWinning);
+                                            })}
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -420,8 +381,8 @@ export default function DesktopGameRenderer({
                     <div className="flex items-center space-x-2">
                         <button
                             onClick={() => adjustBet(-regionSettings.betStep)}
-                            disabled={currentBet <= regionSettings.minBet || isSpinning}
-                            className="w-10 h-10 bg-black/20  rounded-full border-2 font-bold transition-all border-white text-white hover:bg-black/50 disabled:bg-black/80  disabled:text-white/40 disabled:border-white/40"
+                            disabled={currentBet <= regionSettings.minBet || isAnimating}
+                            className="w-10 h-10 bg-black/20 rounded-full border-2 font-bold transition-all border-white text-white hover:bg-black/50 disabled:bg-black/80 disabled:text-white/40 disabled:border-white/40"
                         >
                             <Minus className="w-5 h-5 mx-auto" />
                         </button>
@@ -429,11 +390,11 @@ export default function DesktopGameRenderer({
                         <div className='flex flex-col items-center space-y-2 relative -top-4'>
                             <button
                                 onClick={handleSpin3D}
-                                disabled={isSpinning || currentBet > balance || currentBet < regionSettings.minBet}
+                                disabled={isAnimating || currentBet > balance || currentBet < regionSettings.minBet}
                                 style={getButtonStyle('primary', gameConfig.styling)}
                                 className="w-20 aspect-square rounded-lg font-bold transition-all flex items-center justify-center"
                             >
-                                {isSpinning ? <RotateCcw className="w-6 h-6 animate-spin" /> : <Play className="w-6 h-6" />}
+                                {isAnimating ? <RotateCcw className="w-6 h-6 animate-spin" /> : <Play className="w-6 h-6" />}
                             </button>
 
                             <div className="absolute bottom-0 flex items-center space-x-2">
@@ -441,7 +402,7 @@ export default function DesktopGameRenderer({
                                 <Switch
                                     checked={isAutoSpin}
                                     onCheckedChange={setIsAutoSpin}
-                                    disabled={isSpinning}
+                                    disabled={isAnimating}
                                     className={cn(
                                         "scale-75",
                                         isAutoSpin && "ring-2 ring-white"
@@ -452,8 +413,8 @@ export default function DesktopGameRenderer({
 
                         <button
                             onClick={() => adjustBet(regionSettings.betStep)}
-                            disabled={currentBet >= regionSettings.maxBet || isSpinning}
-                            className="w-10 h-10 bg-black/20  rounded-full border-2 font-bold transition-all border-white text-white hover:bg-black/50 disabled:bg-black/80  disabled:text-white/40 disabled:border-white/40"
+                            disabled={currentBet >= regionSettings.maxBet || isAnimating}
+                            className="w-10 h-10 bg-black/20 rounded-full border-2 font-bold transition-all border-white text-white hover:bg-black/50 disabled:bg-black/80 disabled:text-white/40 disabled:border-white/40"
                         >
                             <Plus className="w-5 h-5 mx-auto" />
                         </button>
