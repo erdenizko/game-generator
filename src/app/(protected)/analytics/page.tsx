@@ -7,11 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, TrendingUp, Trophy, Filter } from 'lucide-react';
+import { RefreshCw, Trophy, Filter } from 'lucide-react';
 import { DashboardStatsCards } from '@/components/analytics/dashboard-stats-cards';
 import { TopGamesCharts } from '@/components/analytics/top-games-charts';
 import { CountryStatsCharts } from '@/components/analytics/country-stats-charts';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface DashboardStats {
   totalRevenue: number;
@@ -351,69 +350,6 @@ export default function AnalyticsPage() {
           </div>
         )}
       </div>
-
-      {/* Recent Activity Chart */}
-      {dashboardStats?.recentActivity && (
-        <div className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
-                Recent Activity (Last 7 Days)
-              </CardTitle>
-              <CardDescription>
-                Daily trends for revenue, players, and spins
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={dashboardStats.recentActivity}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={(value) => new Date(value).toLocaleDateString()}
-                    />
-                    <YAxis yAxisId="left" />
-                    <YAxis yAxisId="right" orientation="right" />
-                    <Tooltip
-                      labelFormatter={(value) => new Date(value).toLocaleDateString()}
-                      formatter={(value: number, name: string) => [
-                        name === 'revenue' ? formatCurrency(value) : formatNumber(value),
-                        name.charAt(0).toUpperCase() + name.slice(1)
-                      ]}
-                    />
-                    <Line
-                      yAxisId="left"
-                      type="monotone"
-                      dataKey="revenue"
-                      stroke="#8884d8"
-                      strokeWidth={2}
-                      name="Revenue"
-                    />
-                    <Line
-                      yAxisId="right"
-                      type="monotone"
-                      dataKey="players"
-                      stroke="#82ca9d"
-                      strokeWidth={2}
-                      name="Players"
-                    />
-                    <Line
-                      yAxisId="right"
-                      type="monotone"
-                      dataKey="spins"
-                      stroke="#ffc658"
-                      strokeWidth={2}
-                      name="Spins"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
 
       {/* Top Performing Game */}
       {dashboardStats?.topPerformingGame && (

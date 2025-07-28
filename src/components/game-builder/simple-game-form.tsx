@@ -248,7 +248,7 @@ export function SimpleGameForm({
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8 flex flex-row gap-4 shadow-xl rounded-lg overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
+          <form onSubmit={handleSubmit} className="space-y-8 flex flex-row gap-4 shadow-xl border border-slate-200 rounded-lg overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
             {/* Form Sidebar */}
             <div className='flex flex-col gap-2 min-w-88 p-4 relative'>
               {selectedView === undefined &&
@@ -612,7 +612,7 @@ export function SimpleGameForm({
                 </div>
               </>}
             </div>
-            <Card className="w-full items-center h-[846px] hover:border-slate-200 flex flex-col gap-6 rounded-none z-20 shadow-none">
+            <div className="w-full bg-slate-50 p-8 items-center h-[846px] hover:border-slate-200 flex flex-col gap-6 rounded-none z-20">
               <CardHeader className="flex flex-row items-center justify-between w-full pb-4 border-b">
                 <div>
                   <CardTitle className="text-2xl text-slate-900 font-black leading-none">Game Preview</CardTitle>
@@ -678,7 +678,7 @@ export function SimpleGameForm({
                   />
                 </div>
               ) : null}
-            </Card>
+            </div>
           </form>
         </div>
       </div >
