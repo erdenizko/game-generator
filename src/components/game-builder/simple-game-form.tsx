@@ -247,7 +247,7 @@ export function SimpleGameForm({
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8 flex flex-row gap-4 shadow-xl rounded-lg overflow-hidden bg-slate-100">
+          <form onSubmit={handleSubmit} className="space-y-8 flex flex-row gap-4 shadow-xl rounded-lg overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
             {/* Form Sidebar */}
             <div className='flex flex-col gap-2 min-w-88 p-4 relative'>
               {selectedView === undefined &&

@@ -62,7 +62,7 @@ export default function DesktopGameRenderer({
 
     // Performance constants
     const VISIBLE_SYMBOLS = gameConfig.rows; // Only render visible symbols
-    const BUFFER_SYMBOLS = 2; // Minimal buffer for smooth transitions
+    const BUFFER_SYMBOLS = 20; // Minimal buffer for smooth transitions
     const TOTAL_SYMBOLS = VISIBLE_SYMBOLS + BUFFER_SYMBOLS;
 
     // Memoized symbol data to prevent recalculations
@@ -113,7 +113,7 @@ export default function DesktopGameRenderer({
                     // Update symbols only once at the end
                     if (reelDataRef.current.finalSymbols) {
                         reelDataRef.current.symbols[reelIndex] = [...reelDataRef.current.finalSymbols[reelIndex]];
-                        
+
                         // Force re-render only for this reel's symbols
                         const symbols = reel.querySelectorAll('.symbol');
                         symbols.forEach((symbolEl, symbolIndex) => {
@@ -122,13 +122,13 @@ export default function DesktopGameRenderer({
                                 const slotItem = getEnhancedSlotItem(symbolId);
                                 const img = symbolEl.querySelector('img');
                                 if (img && slotItem?.imageKey) {
-                                    img.src = slotItem.imageKey;
+                                    img.src = 'https://placehold.co/100x100';
                                     img.alt = slotItem.name || 'Unknown';
                                 }
                             }
                         });
                     }
-                    
+
                     // Reset transform for next animation
                     gsap.set(reel, { rotationX: 0 });
                     resolve();
@@ -185,7 +185,7 @@ export default function DesktopGameRenderer({
             reelDataRef.current.finalSymbols = finalSymbolsData;
 
             // Animate all reels with staggered delays
-            const spinPromises = Array.from({ length: gameConfig.columns }, (_, col) => 
+            const spinPromises = Array.from({ length: gameConfig.columns }, (_, col) =>
                 animateReelSpin(col, finalSymbolsData[col], col * 0.1)
             );
 
@@ -230,17 +230,18 @@ export default function DesktopGameRenderer({
                 )}
                 style={{
                     height: `${100 / gameConfig.rows}%`,
-                    transform: `rotateX(${angle}deg) translateZ(80px)`, // Reduced radius for better performance
+                    transform: `${isVisible ? 'rotateX(0deg) translateZ(0px)' : `rotateX(${angle}deg) translateZ(80px)`}`, // Reduced radius for better performance
                     transformOrigin: '50% 50%',
                     backfaceVisibility: 'hidden',
                     willChange: 'transform',
-                    opacity: isVisible ? 1 : 0.3
+                    opacity: isVisible ? 1 : 0,
+                    top: `${isVisible ? ((100 / gameConfig.rows) * symbolIndex) : 0}%`
                 }}
             >
                 <img
-                    src={slotItem?.imageKey || '/placeholder-symbol.svg'}
+                    src={'https://placehold.co/100x100'}
                     alt={slotItem?.name || 'Unknown'}
-                    className="w-4/5 h-4/5 object-contain"
+                    className="w-full h-full object-contain"
                     loading="lazy"
                     draggable={false}
                 />
@@ -276,7 +277,7 @@ export default function DesktopGameRenderer({
                         {gameConfig.mascot.enabled && (
                             <div className="w-1/5 h-full">
                                 <img
-                                    src={'/placeholder-symbol.svg'}
+                                    src={'https://placehold.co/100x100'}
                                     alt="Game Mascot"
                                     className="w-full h-full object-contain"
                                 />
@@ -295,7 +296,7 @@ export default function DesktopGameRenderer({
                             }}
                         >
                             {/* High-Performance Reels Grid */}
-                            <div 
+                            <div
                                 className="reels-grid h-full rounded-lg overflow-hidden bg-white flex flex-row"
                                 style={{
                                     perspective: '1200px', // Optimized perspective
@@ -325,8 +326,8 @@ export default function DesktopGameRenderer({
                                             {symbolData[colIndex]?.slice(0, TOTAL_SYMBOLS).map((symbolId, symbolIndex) => {
                                                 const isVisible = symbolIndex < gameConfig.rows;
                                                 const isWinning = isVisible && winningLines.some(line =>
-                                                    line.some(pos => 
-                                                        Math.floor(pos / gameConfig.columns) === symbolIndex && 
+                                                    line.some(pos =>
+                                                        Math.floor(pos / gameConfig.columns) === symbolIndex &&
                                                         pos % gameConfig.columns === colIndex
                                                     )
                                                 );
