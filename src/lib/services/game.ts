@@ -159,12 +159,16 @@ export class GameService {
         maxBet: Number(region.maxBet),
         step: Number(region.step),
       })),
-      blockedRegions: jsonConfig.blockedRegions || [],
-      styling: jsonConfig.styling || {},
-      isPublished: game.isPublished,
-      createdAt: game.createdAt,
-      updatedAt: game.updatedAt,
-    };
+              blockedRegions: jsonConfig.blockedRegions || [],
+        styling: jsonConfig.styling || {},
+        isPublished: game.isPublished,
+        isAvailableForSale: game.isAvailableForSale,
+        marketplacePrice: game.marketplacePrice ? Number(game.marketplacePrice) : undefined,
+        marketplaceDescription: game.marketplaceDescription || undefined,
+        isFeatured: game.isFeatured,
+        createdAt: game.createdAt,
+        updatedAt: game.updatedAt,
+      };
   }
 
   // List games for a user
@@ -279,6 +283,10 @@ export class GameService {
         blockedRegions: jsonConfig.blockedRegions || [],
         styling: jsonConfig.styling || {},
         isPublished: game.isPublished,
+        isAvailableForSale: game.isAvailableForSale,
+        marketplacePrice: game.marketplacePrice ? Number(game.marketplacePrice) : undefined,
+        marketplaceDescription: game.marketplaceDescription || undefined,
+        isFeatured: game.isFeatured,
         createdAt: game.createdAt,
         updatedAt: game.updatedAt,
       };

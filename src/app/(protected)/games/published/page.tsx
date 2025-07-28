@@ -8,15 +8,19 @@ import {
   Plus,
   MoreHorizontal,
   Trash2,
+  ShoppingCart,
+  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import Link from 'next/link';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
+import { MarketplaceSettingsDialog } from '@/components/marketplace/marketplace-settings-dialog';
 
 // Constants
 const ITEMS_PER_PAGE = 12;
@@ -109,10 +113,12 @@ const CreateGameCardSkeleton = () => (
 );
 
 // Game card component
-const GameCard = ({ game, onDelete, onTogglePublish }: {
+const GameCard = ({ game, onDelete, onTogglePublish, onRemoveFromMarketplace, onRefresh }: {
   game: GameConfig;
   onDelete: (id: string) => void;
   onTogglePublish: (id: string, publish: boolean) => void;
+  onRemoveFromMarketplace: (id: string) => void;
+  onRefresh: () => void;
 }) => {
   return (
     <Card onClick={() => window.location.href = `/builder?gameId=${game.id}`}>
@@ -120,9 +126,28 @@ const GameCard = ({ game, onDelete, onTogglePublish }: {
         <Image src={`https://game-manager-dakik.s3.eu-north-1.amazonaws.com/${game.coverImageKey}` || 'https://placehold.co/600x400'} alt={game.title} width={100} height={100} className='w-full aspect-3/4 ' />
         <div className="flex justify-between items-start -mt-8">
           <div>
-            <CardTitle className="flex flex-row gap-4">{game.title}</CardTitle>
+            <CardTitle className="flex flex-row gap-4 items-center">
+              {game.title}
+              {game.isAvailableForSale && (
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  <ShoppingCart className="w-3 h-3 mr-1" />
+                  For Sale
+                </Badge>
+              )}
+              {game.isFeatured && (
+                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                  <Star className="w-3 h-3 mr-1" />
+                  Featured
+                </Badge>
+              )}
+            </CardTitle>
             <CardDescription className="mt-2 mb-4">
               Last updated: {formatDate(game.updatedAt)}
+              {game.isAvailableForSale && game.marketplacePrice && (
+                <span className="ml-2 font-semibold text-green-600">
+                  ${game.marketplacePrice}
+                </span>
+              )}
             </CardDescription>
           </div>
 
@@ -138,6 +163,19 @@ const GameCard = ({ game, onDelete, onTogglePublish }: {
                 <DropdownMenuItem onClick={() => onTogglePublish(game.id as string, !game.isPublished)}>
                   {game.isPublished ? 'Unpublish' : 'Publish'}
                 </DropdownMenuItem>
+                
+                <MarketplaceSettingsDialog 
+                  game={game} 
+                  onSettingsUpdate={onRefresh}
+                />
+                
+                {game.isAvailableForSale && (
+                  <DropdownMenuItem onClick={() => onRemoveFromMarketplace(game.id as string)}>
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Remove from Marketplace
+                  </DropdownMenuItem>
+                )}
+                
                 <DropdownMenuItem onClick={() => onDelete(game.id as string)}>
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete
@@ -264,6 +302,39 @@ export default function GamesPage() {
     }
   }, [queryClient, toast]);
 
+  // Handle remove from marketplace
+  const handleRemoveFromMarketplace = useCallback(async (id: string) => {
+    try {
+      const response = await fetch('/api/marketplace/remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify({
+          gameId: id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to remove game from marketplace');
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Game removed from marketplace successfully',
+      });
+
+      queryClient.invalidateQueries({ queryKey: ['games'] });
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: err instanceof Error ? err.message : 'Failed to remove game from marketplace',
+        variant: 'destructive',
+      });
+    }
+  }, [queryClient, toast]);
+
   // Handle sort change
   const handleSortChange = useCallback((sort: string, order: 'asc' | 'desc') => {
     console.log('sort', sort);
@@ -339,13 +410,13 @@ export default function GamesPage() {
   return (
     <ProtectedRoute>
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-3">
-        <div className='flex flex-col gap-1'>
-          <h1 className="text-4xl tracking-tighter font-bold leading-none text-slate-600">Draft Games</h1>
-          <p className="text-xl tracking-tight opacity-80 text-slate-600">Manage your draft slot games and track their performance</p>
-        </div>
-      </div>
+                  {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-3">
+              <div className='flex flex-col gap-1'>
+                <h1 className="text-4xl tracking-tighter font-bold leading-none text-slate-600">Published Games</h1>
+                <p className="text-xl tracking-tight opacity-80 text-slate-600">Manage your published games and marketplace settings</p>
+              </div>
+            </div>
 
       {/* Controls */}
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
@@ -372,6 +443,8 @@ export default function GamesPage() {
             game={game}
             onDelete={handleDelete}
             onTogglePublish={handleTogglePublish}
+            onRemoveFromMarketplace={handleRemoveFromMarketplace}
+            onRefresh={() => queryClient.invalidateQueries({ queryKey: ['games'] })}
           />
         ))}
       </div>
