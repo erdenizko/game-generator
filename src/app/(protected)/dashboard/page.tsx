@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, TrendingUp, Trophy } from 'lucide-react';
+import { TrendingUp, Trophy } from 'lucide-react';
 import { DashboardStatsCards } from '@/components/analytics/dashboard-stats-cards';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ProtectedRoute } from '@/components/auth/protected-route';
+import Header from '@/components/layout/header';
 
 interface DashboardStats {
     totalRevenue: number;
@@ -31,41 +32,26 @@ interface DashboardStats {
     }[];
 }
 
+async function fetchDashboardData(): Promise<DashboardStats> {
+    const response = await fetch(`/api/metrics/dashboard?period=7d`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch dashboard stats');
+    }
+
+    const statsData = await response.json();
+    return statsData.data;
+}
+
 export default function DashboardPage() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchDashboardData = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            // Fetch dashboard stats
-            const statsResponse = await fetch(`/api/metrics/dashboard?period=7d`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-                },
-            });
-
-            if (!statsResponse.ok) {
-                throw new Error('Failed to fetch dashboard stats');
-            }
-
-            const statsData = await statsResponse.json();
-            setDashboardStats(statsData.data);
-
-        } catch (err) {
-            console.error('Error fetching dashboard data:', err);
-            setError(err instanceof Error ? err.message : 'An error occurred');
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchDashboardData();
-    }, [fetchDashboardData]);
+    const { data: dashboardStats } = useQuery<DashboardStats>({
+        queryKey: ['dashboardStats'],
+        queryFn: fetchDashboardData,
+    });
 
     const formatCurrency = (amount: number): string => {
         return new Intl.NumberFormat('en-US', {
@@ -80,40 +66,9 @@ export default function DashboardPage() {
         return new Intl.NumberFormat('en-US').format(num);
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
-                    <p className="text-lg">Loading dashboard...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <p className="text-lg text-red-600 mb-4">Error: {error}</p>
-                    <Button onClick={fetchDashboardData} variant="outline">
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Retry
-                    </Button>
-                </div>
-            </div>
-        );
-    }
-
     return (
-        <div className="container mx-auto px-4 py-8">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold">Dashboard</h1>
-                    <p className="text-muted-foreground">Monitor your game performance and analytics</p>
-                </div>
-            </div>
+        <>
+            <Header title="Dashboard" description="Track your game performance and player engagement" />
 
             {/* Stats Cards */}
             {dashboardStats && (
@@ -218,6 +173,6 @@ export default function DashboardPage() {
                 </div>
             )}
 
-        </div>
+        </>
     );
 }

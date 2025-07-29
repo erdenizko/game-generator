@@ -1,6 +1,5 @@
 // Core game configuration types
 export interface GameConfig {
-  id?: string;
   title: string;
   description: string;
   rows: number; // 1-10
@@ -22,9 +21,12 @@ export interface GameConfig {
   marketplacePrice?: number;
   marketplaceDescription?: string;
   isFeatured?: boolean;
-  
-  createdAt?: Date;
-  updatedAt?: Date;
+}
+
+export interface EditGameConfig extends GameConfig {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Enhanced game configuration with new features
@@ -452,7 +454,7 @@ export interface ResponsivenessIssue {
 }
 
 // Marketplace types
-export interface MarketplaceGame extends GameConfig {
+export interface MarketplaceGame extends EditGameConfig {
   ownerId: string;
   ownerEmail: string;
   purchaseCount: number;

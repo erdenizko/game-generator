@@ -138,7 +138,7 @@ export function GamesDashboard({
             Manage your slot games and track their performance
           </p>
         </div>
-        <Link href="/builder?create=true">
+        <Link href="/games/new">
           <Button size='lg' className='h-10'>
             <Plus className="w-4 h-4" />
             Create New Game
@@ -288,7 +288,7 @@ export function GamesDashboard({
                 }
               </p>
               {!searchTerm && filterStatus === 'all' && (
-                <Link href="/builder?create=true">
+                <Link href="/games/new">
                   <Button>
                     <Plus className="w-4 h-4 mr-2" />
                     Create Your First Game
@@ -341,13 +341,13 @@ export function GamesDashboard({
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`/builder?gameId=${game.id}`}>
+                          <Link href={`/games/${game.id}`}>
                             <Edit className="w-4 h-4 mr-2" />
                             Edit
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`/builder?duplicate=${game.id}`}>
+                          <Link href={`/games/${game.id}?duplicate=true`}>
                             <Copy className="w-4 h-4 mr-2" />
                             Duplicate
                           </Link>

@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
-import "@/app/globals.css";
-import { Navigation } from "@/components/navigation";
-import { Toaster } from "@/components/ui/toaster";
+'use client'
 
-export const metadata: Metadata = {
-  title: "Slot Game Builder - Dashboard",
-  description: "Create and customize HTML5 slot games without coding",
-};
+import { Navigation } from "@/components/layout/navigation";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function ProtectedLayout({
   children,
@@ -17,7 +12,7 @@ export default function ProtectedLayout({
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-slate-100">
       <Navigation />
 
-      <main className="pt-28 px-4 max-w-7xl mx-auto text-foreground relative z-20">
+      <main className="pt-24 px-4 max-w-7xl mx-auto text-foreground relative z-20">
         {children}
       </main>
 

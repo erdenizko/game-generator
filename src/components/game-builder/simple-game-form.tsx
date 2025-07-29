@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,11 +26,11 @@ import { SlotItem } from '@/types/SlotItem';
 import { Mascot } from '@/types/Mascot';
 import { GameStyling } from '@/types/GameStyling';
 import { GameSound } from '@/types/GameSound';
-import { Language, Region } from '@/lib/types';
+import { Language, Region, GameConfig, ApiResponse } from '@/lib/types';
 import SlotGameEngine from '@/components/game-runtime/slot-game-engine';
-import { GameConfig, SpinResult } from '@/lib/types';
 import { Select, SelectContent, SelectValue, SelectTrigger, SelectItem } from '@/components/ui/select';
 import { CreateWithAIDialog, VisualAssetType } from './create-with-ai-dialog';
+
 // Constants for Localization & Regions
 const ALL_LOCALES = [
   { code: 'en', name: 'English' },
@@ -78,27 +80,16 @@ export interface GameFormData {
 
 interface SimpleGameFormProps {
   initialData?: Partial<GameFormData>;
-  onSave: (data: GameFormData) => Promise<void>;
-  onPreview?: (data: GameFormData) => Promise<void>;
-  onDelete?: () => Promise<void>;
-  isLoading?: boolean;
-  isPreviewLoading?: boolean;
-  className?: string;
   mode?: 'create' | 'edit' | 'duplicate';
-  sessionId: string | null;
-  error: string | null;
+  sessionId?: string | null;
 }
 
 export function SimpleGameForm({
   initialData,
-  onSave,
-  onPreview,
-  onDelete,
-  isLoading = false,
-  isPreviewLoading = false,
-  sessionId,
-  error,
+  mode = 'create',
+  sessionId: initialSessionId,
 }: SimpleGameFormProps) {
+  const router = useRouter();
   const [formData, setFormData] = useState<GameFormData>({
     id: initialData?.id || '',
     title: initialData?.title || '',
@@ -119,6 +110,9 @@ export function SimpleGameForm({
     createdAt: initialData?.createdAt?.toString() || '',
     updatedAt: initialData?.updatedAt?.toString() || '',
   });
+
+  const [sessionId, setSessionId] = useState<string | null>(initialSessionId || null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('Initializing form data with:', initialData);
@@ -146,9 +140,123 @@ export function SimpleGameForm({
     }
   }, [initialData]);
 
+  // Save mutation
+  const saveMutation = useMutation<void, Error, GameFormData>({
+    mutationFn: async (formData) => {
+      const url = mode === 'edit' && formData.id ? `/api/games/${formData.id}` : '/api/games';
+      const method = mode === 'edit' ? 'PUT' : 'POST';
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      const result: ApiResponse = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.error?.message || 'Failed to save game');
+    },
+    onSuccess: () => {
+      setError(null);
+      router.push('/games');
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+
+  // Preview mutation
+  const previewMutation = useMutation<string, Error, GameFormData>({
+    mutationFn: async (formData) => {
+      const targetGameId = formData.id;
+      if (targetGameId) {
+        const response = await fetch(`/api/game/preview?gameId=${targetGameId}`, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
+        });
+        if (!response.ok) throw new Error('Failed to create preview');
+        const result = await response.json();
+        if (!result.success || !result.data?.sessionId) {
+          throw new Error(result.error?.message || 'No preview session ID returned');
+        }
+        return result.data.sessionId;
+      }
+
+      // Fallback for when no game ID exists
+      const tempData = { ...formData, title: `${formData.title} (Preview)`, isPreview: true };
+      const saveRes = await fetch('/api/games', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(tempData),
+      });
+      if (!saveRes.ok) throw new Error('Failed to create temporary game for preview');
+      const saveResult: ApiResponse<GameConfig> = await saveRes.json();
+      if (!saveResult.success || !saveResult.data?.id) {
+        throw new Error(saveResult.error?.message || 'Failed to create temporary game');
+      }
+      const sessionRes = await fetch(`/api/game/preview?gameId=${saveResult.data.id}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
+      });
+      if (!sessionRes.ok) throw new Error('Failed to create preview session');
+      const sessionResult = await sessionRes.json();
+      if (!sessionResult.success || !sessionResult.data?.sessionId) {
+        throw new Error(sessionResult.error?.message || 'No preview session ID returned');
+      }
+      return sessionResult.data.sessionId;
+    },
+    onSuccess: (newSessionId) => {
+      setSessionId(newSessionId);
+      setError(null);
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation<void, Error, string>({
+    mutationFn: async (gameId) => {
+      const response = await fetch(`/api/games/${gameId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
+      });
+      if (!response.ok) throw new Error('Failed to delete game');
+    },
+    onSuccess: () => {
+      setError(null);
+      router.push('/games');
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+
   const updateFormData = (updates: Partial<GameFormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
   };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    await saveMutation.mutateAsync(formData);
+  };
+
+  const handlePreview = async () => {
+    setError(null);
+    await previewMutation.mutateAsync(formData);
+  };
+
+  const handleDelete = async () => {
+    if (!formData.id) return;
+
+    if (confirm('Are you sure you want to delete this game?')) {
+      setError(null);
+      await deleteMutation.mutateAsync(formData.id);
+    }
+  };
+
   const sidebarItems = [
     { step: 1, view: 'basic', label: 'Basic Information' },
     { step: 2, view: 'visual', label: 'Visual Assets' },
@@ -166,78 +274,68 @@ export function SimpleGameForm({
 
   const mascotFileTypes = ['startFile', 'spinFile', 'loseFile', 'winFile', 'idleFile'] as const;
   type MascotFileType = typeof mascotFileTypes[number];
+
   const [selectedView, setSelectedView] = useState<'basic' | 'visual' | 'slot' | 'audio' | 'mascot' | 'styling' | 'localization' | 'region' | 'publish' | undefined>(undefined);
   const [deviceMode, setDeviceMode] = useState<'desktop' | 'mobile'>(() => typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop');
+
   useEffect(() => {
     function handleResize() { setDeviceMode(window.innerWidth < 768 ? 'mobile' : 'desktop'); }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await onSave(formData);
-    } catch (error) {
-      console.error('Save failed:', error);
-    }
-  };
+  const isSaveLoading = saveMutation.isPending;
+  const isPreviewLoading = previewMutation.isPending;
+  const isDeleteLoading = deleteMutation.isPending;
 
   return (
     <div className="min-h-screen">
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex flex-row justify-between">
-            <div>
-              <h1 className="text-4xl font-bold">
-                {formData.id ? 'Edit Game' : 'Create New Game'}
-              </h1>
-              <p className="text-xl font-medium">
-                {formData.id ? 'Refine your masterpiece' : 'Design your ultimate slot game experience'}
-              </p>
-            </div>
-
             {/* Action Buttons */}
             <div className="flex items-center justify-between gap-4 pt-8">
               <div>
-                {onDelete && (
+                {mode === 'edit' && formData.id && (
                   <Button
                     type="button"
                     variant="destructive"
-                    onClick={onDelete}
-                    disabled={isLoading}
+                    onClick={handleDelete}
+                    disabled={isSaveLoading || isPreviewLoading || isDeleteLoading}
                     className="bg-red-600 hover:bg-red-700 text-white"
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
+                    {isDeleteLoading ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4 mr-2" />
+                    )}
                     Delete Game
                   </Button>
                 )}
               </div>
 
               <div className="flex gap-3">
-                {onPreview && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => onPreview && onPreview(formData)}
-                    disabled={isPreviewLoading || isLoading}
-                    className="border-purple-500 text-purple-400 hover:bg-purple-500/20 hover:text-purple-300"
-                  >
-                    {isPreviewLoading ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Eye className="w-4 h-4 mr-2" />
-                    )}
-                    Preview
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handlePreview}
+                  disabled={isPreviewLoading || isSaveLoading || isDeleteLoading}
+                  className="border-purple-500 text-purple-400 hover:bg-purple-500/20 hover:text-purple-300"
+                >
+                  {isPreviewLoading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Eye className="w-4 h-4 mr-2" />
+                  )}
+                  Preview
+                </Button>
 
                 <Button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isSaveLoading || isPreviewLoading || isDeleteLoading}
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                 >
-                  {isLoading ? (
+                  {isSaveLoading ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   ) : (
                     <Save className="w-4 h-4 mr-2" />
@@ -246,9 +344,16 @@ export function SimpleGameForm({
                 </Button>
               </div>
             </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600">{error}</p>
+              </div>
+            )}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8 flex flex-row gap-4 shadow-xl border border-slate-200 rounded-lg overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
+          <form onSubmit={handleSave} className="space-y-8 flex flex-row gap-4 shadow-xl border border-slate-200 rounded-lg overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
             {/* Form Sidebar */}
             <div className='flex flex-col gap-2 min-w-88 p-4 relative'>
               {selectedView === undefined &&
@@ -650,7 +755,7 @@ export function SimpleGameForm({
                       styling: formData.styling,
                       isPublished: formData.isPublished,
                     } as GameConfig}
-                    sessionId={sessionId!}
+                    sessionId={sessionId}
                     deviceMode={deviceMode}
                     onSpin={async (bet) => {
                       const mockMatrix: string[][] = [];
@@ -674,7 +779,7 @@ export function SimpleGameForm({
                         balance: 1000 - bet + winAmount
                       };
                     }}
-                    onBalanceUpdate={(balance) => { }}
+                    onBalanceUpdate={() => { }}
                   />
                 </div>
               ) : null}

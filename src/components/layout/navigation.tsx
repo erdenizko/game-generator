@@ -1,24 +1,20 @@
 'use client';
 
 import { useAuth } from '@/contexts/auth-context';
-import { Button } from '@/components/ui/button';
 import { LogoutButton } from '@/components/auth/logout-button';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Gamepad2,
   BarChart3,
-  Plus,
-  Menu,
-  X,
   Store,
   FileIcon,
   LayoutDashboard,
   User
 } from 'lucide-react';
 import Image from 'next/image';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export function Navigation() {
   const { user, isAuthenticated } = useAuth();
